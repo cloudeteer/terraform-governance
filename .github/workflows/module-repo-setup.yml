@@ -1,0 +1,319 @@
+---
+name: module-repo-setup
+on:
+  workflow_dispatch:
+    inputs:
+      force-apply:
+        description: "If true, force apply the terraform plan."
+        required: false
+        type: boolean
+        default: false
+      unlock-lock-id:
+        description: "If non-empty, forcefully unlock terraform state by ID."
+        required: false
+        type: string
+        default: ""
+      create_repo: # Define create_repo as an input
+        description: "(optional) Enter Terraform Module Repository Name to create."
+        required: false
+        type: string
+        default: ""
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - .github/workflows/module-repo-setup.yml
+      - terraform/**
+
+env:
+  # renovate: github=opentofu/opentofu
+  TF_VERSION: v1.7.1
+  TF_IN_AUTOMATION: true
+  TF_INPUT: false
+  # https://developer.hashicorp.com/terraform/cli/commands#upgrade-and-security-bulletin-checks
+  CHECKPOINT_DISABLE: true
+  ARM_PARTNER_ID: "1782f57c-edb6-4bf8-bd26-c7e0ef75c1e8"
+  # ARM_USE_CLI Never works for SPN
+  ARM_USE_CLI: "false"
+  ## Should OIDC be used for Authentication?
+  # ref: https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure
+  ARM_USE_OIDC: "false"
+  ARM_OIDC_TOKEN_FILE_PATH: "${{ false && format('{0}/.az-token', github.workspace) || '' }}"
+  AZURE_TENANT_ID: ${{ secrets.ORGA_CDT_TENANT_ID }}
+  AZURE_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+  AZURE_CLIENT_ID: ${{ secrets.ORGA_CDT_CLIENT_ID }}
+  AZURE_CLIENT_SECRET: ${{ secrets.ORGA_CDT_CLIENT_SECRET }}
+  WORKING_DIRECTORY: "terraform"
+  # How to generate this:
+  # cd prod-opsstack/terraform && tofu init -upgrade -backend=false && tofu providers lock -platform=darwin_arm64 -platform=darwin_arm64 -platform=linux_arm64 -platform=linux_amd64 && cat .terraform.lock.hcl
+  #language=hcl-terraform
+  TERRAFORM_LOCKFILE: |
+    # This file is maintained automatically by "tofu init".
+    # Manual edits may be lost in future updates.
+    
+    provider "registry.opentofu.org/azure/azapi" {
+      version     = "1.12.1"
+      constraints = "~> 1.12.0"
+      hashes = [
+        "h1:0f38vRu8qsEMOkxnezYvhy2OidH0OCsZ+wpUot3CbRQ=",
+        "h1:4uNzgEfL4VJ48QYAKM4A/E+HWyx7roO58xmR3R2WNh0=",
+        "h1:EaQL7pQCRm5iL2zy/dG7rOe2OZ0ZypuyVnpQAiAwJmM=",
+        "h1:Gv1HwQMV7+3ctMPr1nKmOhEGu+UWb6FlQmrgaHxknJ4=",
+        "zh:1cf52e685ceb04e73e13fbf3f3036bff23a3274a4ceda8693c0612076a588166",
+        "zh:321b59c2a67c6cb4e5cf0dbe2cc978f5389d781e8b391f9b75bf4d830abd2ffe",
+        "zh:49046bd8020c3b44c6b5dc67041f181e4fff45e3bc1a9ff0646dd20c21c8ce47",
+        "zh:5784d0c326ec4825571577bc39b253019bd3b1030c19d67ca3436df2d7ba01c8",
+        "zh:5ad7e18d26f170c01888d8e65dab7aa475089aac7bf0106526fd57cdd56533bc",
+        "zh:6695854f4f655673bea85e37444bf0c070b440dba4bc269aa144d0f6b7c1cc5f",
+        "zh:7f372c897da6b9ad90869a8eb85b37dad4dff2d5d311b3eca1a2e6373e2271ed",
+        "zh:8afa1a2be1dada4e8be4ab72d9d56f36af1e486c9353d04aabf6e79db7310125",
+        "zh:90809364619238c45185bff25c7d9c4fde34253561d8183ebbe797456c44bc9c",
+        "zh:9338d44650c9e68e10a6bc2d69f7beacd5059e6ac681d2e388e80a1652d9c183",
+        "zh:c94ee6fb1df2c1d35f338107b5e73cdba86c4ecf9dcde95e2ca0132cbbd4bd7c",
+        "zh:de231d363b1a664c6b5d3af8d3b9cf542d04d4506fb9458ba6c8ebf94e0e32ae",
+      ]
+    }
+    
+    provider "registry.opentofu.org/hashicorp/azurerm" {
+      version     = "3.104.1"
+      constraints = "~> 3.64, != 3.96.0"
+      hashes = [
+        "h1:0v+MwfcTk/zY85QUkLVBYJEIYA+Y5LH403XHJKPTHsc=",
+        "h1:EnIXXVYTCV/cYwCU0PCiFL9Fm3+uTMFuSgoYEIaTwcs=",
+        "h1:Z75zt6Vujf32IXljjQLPXwfXbUvgEa2m/A6l7JDilcY=",
+        "h1:uzzUYYxWxzBKI7RZFB+lOMXh0NXlginX/dteTCt1IM0=",
+        "zh:0d72c60e2830f41e467e45d2fac6193a7d4d319e6db5eadba97eeec4eef118a0",
+        "zh:2183cee3bd9f07114fbd54492271d438d0430bc70f2ad916634b3eea2c963a58",
+        "zh:55776e6548dca7d2bed6a3bdf5c5f947ecf46561d5a226577d97761304caa204",
+        "zh:5a620eb225bc48f7b1656aab492b812de3c70865e4c028c2c0c312c312e55c73",
+        "zh:729cb4dc9f660a005aa0ec6f99fd9c0af3764639bc7289cd46bbd35b91e889d5",
+        "zh:94f3b4ae03d9ad5501a0cf2de93f1ddb713e39c408470315696c946d33568317",
+        "zh:9505e92ed28dd9eb6a35b5ca3e0f4ef8ab98db06e5a3ef28e2507028e7a3b7c0",
+        "zh:9eb5c56da9a0c06ccef6285b8ba42ddffd043c5d8e1308faa7868788f7fcd164",
+        "zh:e501360033d2c445ff1031fc99769bdaeca4ca6090fb226c3150aa73335656d3",
+        "zh:e82c9f082a94f37817b3d8a4db02b75002934e3022bb7d0e8afa02e59ace4d0a",
+      ]
+    }
+    
+    provider "registry.opentofu.org/hashicorp/random" {
+      version     = "3.6.1"
+      constraints = "~> 3.5"
+      hashes = [
+        "h1:HLVcY4VsIZMjaHqeIGq1vpXeug1AKH4BYF3IPqYqJqA=",
+        "h1:XU+ptxFKktmvDgEjaLm1PCwZ2lcrLwsR0YMG2NxeFLw=",
+        "h1:egGGMQ18ihxoFBTgL/6aRL2N5/0bTI738Mg+TTsvBHA=",
+        "h1:lrq9tpVBoBfEH9APjzjtqtydLf2s9VPiS/If816nPdg=",
+        "zh:1208af24d1f66e858740812dd5da12e8951b1ca75cc6edb1975ba22bfdeefb1b",
+        "zh:19137e9b4d3c15e1d99d2352888b98ec0e69bd5b2e89049150379d7bbd115063",
+        "zh:26613834a1a8ac60390c7a4cbd4cb794b01dfe237d2b0c10f132f3e434a21e03",
+        "zh:2cbe4425918f3f401609d89e6381f7d120493d637a3d103d827f0c0fd00b1600",
+        "zh:44ef27a972540435efa88f323280f96d6ac77934079225e7fcc3560cc28aae59",
+        "zh:8c5d4ca7d1ce007f7c055807cde77aad4685eb807ff802c93ffbec8589068f17",
+        "zh:9a4fa908d6af48805c862cd4f3a1031d552b96d863a94263e390ac92915d74a9",
+        "zh:ba396849f0f6d488784f6039095634e1c84e67e31375f3d17218fcf8ce952cb8",
+        "zh:cb695db8798957bd64ce411f061307e39cb2baa69668b4d42ccf010db47d2e39",
+        "zh:d02704bf99a93dc0b1ca00bd6051df9c431fbe17cd662a1ab58db1b96264a26f",
+      ]
+    }
+    
+    provider "registry.opentofu.org/hashicorp/time" {
+      version     = "0.11.1"
+      constraints = "~> 0.11.0"
+      hashes = [
+        "h1:+S9YvR/HeCxFGMS3ITjOFqlWrR6DdarWWowT9Cz18/M=",
+        "h1:HSQ/mQFgGE6du6H/v4eCPKpUjQEy3mknmPBDNXoz9g0=",
+        "h1:gzDW6CGFvzcPTiLxJ7gZqWNJ6lluuD9zwj/rFQPg5yw=",
+        "h1:jZpXeN0nw4uNakKnWdyB3JgQ1VmkL2hmhnhP8VFAzBQ=",
+        "zh:048c56f9f810f67a7460363a26bf3ef939d64f0d7b7342b9e7f24cc85ee1491b",
+        "zh:49f949cc5cb50fbb65f7b4578b79fbe02b6bafe9e3f5f1c2936114dd445b84b3",
+        "zh:553174a4fa88f6e186800d7ee155a6b5b4c6c81793643f1a20eab26becc7f823",
+        "zh:5cae304e21f77091d4b50389c655afd5e4e2e8d4cd9c06de139a31b8e7d343a9",
+        "zh:7aae20832bd9885f034831aa44db3a6ffcec034a2d5a2815d92c42c40c14ca1d",
+        "zh:93d715610dce777474b5eff1d7dbe797e72ca0b679cd8636efb3aa45d1cb589e",
+        "zh:bd29e04645775851eb10e7f3b39104ae57ca3632dec4ae07328d33d4182e7fb5",
+        "zh:d6ad6a4d52a6989b8452466f2ec3dbcdb00cc44a96bd1ca618d91a5d74895f49",
+        "zh:e68cfad3ec526631410fa9406938d624fd56b9ab065c76525cb3f731d106fbfe",
+        "zh:ffee8aa6b7ce56f4b8fdc0c492404be0041137a278388eb1d1180b637fb5b3de",
+      ]
+    }
+  #language=hcl
+  TFVARS_FILE: |
+    github_token = "${{ secrets.MANAGE_REPOS_GITHUB_TOKEN }}"
+    create_repo = ["${{ inputs.create_repos }}"]
+  # secret MANAGE_REPOS_GITHUB_TOKEN == Keeper/GitHub cloudeteerbot/terraform-governance-managed-repos (https://keepersecurity.eu/vault/#detail/4y33tgsK_Yuv8mJUXDUPrQ)
+
+concurrency:
+  group: terraform
+
+jobs:
+  plan:
+    name: Plan
+    environment: Terraform (Plan)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TF_LOCK: false
+    defaults:
+      run:
+        working-directory: "${{ env.WORKING_DIRECTORY }}"
+    outputs:
+      exit-code: ${{ steps.plan.outputs.exitcode }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: ${{ env.TF_VERSION }}
+          tofu_wrapper: false
+
+      - name: az login
+        run: |-
+          if [ "${ARM_USE_OIDC}" == "true" ]; then
+            echo "Run az login with federated credentials"
+            OIDC_TOKEN_JSON="$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange")"
+            OIDC_TOKEN="$(jq -r '.value' <<< "${OIDC_TOKEN_JSON}")"
+            printf '%s' "${OIDC_TOKEN}" >"${ARM_OIDC_TOKEN_FILE_PATH}"
+
+            az login --service-principal -t "$AZURE_TENANT_ID" -u "$AZURE_CLIENT_ID" --federated-token "$OIDC_TOKEN" -o table
+          else
+            echo "Run az login with password"
+            az login --service-principal -t "$AZURE_TENANT_ID" -u "$AZURE_CLIENT_ID" -p="$AZURE_CLIENT_SECRET" -o table
+          fi
+
+          az account set -s "${AZURE_SUBSCRIPTION_ID}"
+        env:
+          AZURE_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: write additional terraform files
+        run: |-
+          test -f ".terraform.lock.hcl" || printf '%s' "${TERRAFORM_LOCKFILE}" > ".terraform.lock.hcl"
+          printf '%s' "${TFVARS_FILE}" > "pipeline.auto.tfvars"
+        env:
+          TFVARS_FILE: "${{ env.TFVARS_FILE }}"
+          TERRAFORM_LOCKFILE: "${{ env.TERRAFORM_LOCKFILE }}"
+
+      - name: tofu init
+        run: tofu init
+        working-directory: "${{ env.WORKING_DIRECTORY }}"
+        env:
+          ARM_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+          TF_LOG: "${{ runner.debug && 'trace' || '' }}"
+
+      - name: tofu force-unlock
+        if: ${{ github.event.inputs.unlock-lock-id }}
+        run: tofu force-unlock "${{ github.event.inputs.unlock-lock-id }}" -force
+        env:
+          ARM_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+
+      - name: tofu plan
+        id: plan
+        run: |
+          set +e
+          tofu plan -out terraform.tfplan -detailed-exitcode ${{ !env.RUN_APPLY && '-lock=false' || '' }}
+
+          EXIT_CODE=$?
+          if [ $EXIT_CODE -ne 2 ] && [ $EXIT_CODE -ne 0 ]; then
+            exit $EXIT_CODE
+          fi
+
+          echo "exitcode=$EXIT_CODE" >> $GITHUB_OUTPUT
+        env:
+          ARM_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+          TF_LOG: "${{ runner.debug && 'trace' || '' }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: terraform.tfplan
+          path: ${{ env.WORKING_DIRECTORY }}/terraform.tfplan
+
+  apply:
+    if: ${{ !cancelled() && !failure() && (inputs.force-apply || github.event.pull_request.draft == false && needs.plan.outputs.exit-code == 2) }}
+    name: Apply
+    environment: Terraform
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: "${{ env.WORKING_DIRECTORY }}"
+    needs: [plan]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: terraform.tfplan
+          path: ${{ env.WORKING_DIRECTORY }}
+
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: ${{ env.TF_VERSION }}
+          tofu_wrapper: false
+
+      - name: az login
+        run: |-
+          if [ "${ARM_USE_OIDC}" == "true" ]; then
+            echo "Run az login with federated credentials"
+            OIDC_TOKEN_JSON="$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange")"
+            OIDC_TOKEN="$(jq -r '.value' <<< "${OIDC_TOKEN_JSON}")"
+            printf '%s' "${OIDC_TOKEN}" >"${ARM_OIDC_TOKEN_FILE_PATH}"
+
+            az login --service-principal -t "$AZURE_TENANT_ID" -u "$AZURE_CLIENT_ID" --federated-token "$OIDC_TOKEN" -o table
+          else
+            echo "Run az login with password"
+            az login --service-principal -t "$AZURE_TENANT_ID" -u "$AZURE_CLIENT_ID" -p="$AZURE_CLIENT_SECRET" -o table
+          fi
+
+          az account set -s "${AZURE_SUBSCRIPTION_ID}"
+        env:
+          AZURE_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: write additional terraform files
+        run: |-
+          test -f ".terraform.lock.hcl" || printf '%s' "${TERRAFORM_LOCKFILE}" > ".terraform.lock.hcl"
+          printf '%s' "${TFVARS_FILE}" > "pipeline.auto.tfvars"
+        env:
+          TFVARS_FILE: "${{ env.TFVARS_FILE }}"
+          TERRAFORM_LOCKFILE: "${{ env.TERRAFORM_LOCKFILE }}"
+
+      - name: tofu init
+        run: tofu init
+        env:
+          ARM_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+          TF_LOG: "${{ runner.debug && 'trace' || '' }}"
+
+      - name: tofu apply
+        run: tofu apply terraform.tfplan
+        env:
+          ARM_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+          TF_LOG: "${{ runner.debug && 'trace' || '' }}"
+
+      - name: Unlock terraform state if job was canceled
+        if: ${{ cancelled() }}
+        continue-on-error: true
+        run: tofu force-unlock -force $(tofu force-unlock -force "unknown" |& grep -e "^  ID:" | cut -d':' -f2 | tr -d '[[:space:]]')
+        env:
+          ARM_TENANT_ID: ${{ env.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ env.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ env.AZURE_CLIENT_SECRET }}
+          TF_LOG: "${{ runner.debug && 'trace' || '' }}"

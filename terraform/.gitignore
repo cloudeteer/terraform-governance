@@ -32,3 +32,7 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore CI generated files
+.terraform.lock.hcl
+pipeline.auto.tfvars
