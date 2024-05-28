@@ -14,21 +14,42 @@ terraform {
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
 resource "github_repository" "repository" {
-  name     = var.repository_name
-  visibility      = "private"
-  has_discussions = false
-  has_issues      = false
-  has_projects    = false
-  has_wiki        = false
-  has_downloads   = false
-  allow_merge_commit = false
-  allow_rebase_merge = false
-  topics = ["terraform", "terraform-module"]
-  vulnerability_alerts = true
+  name                 = var.repository_name
+  visibility           = "private"
+  has_discussions      = false
+  has_issues           = false
+  has_projects         = false
+  has_wiki             = false
+  has_downloads        = false
+  allow_merge_commit   = false
+  allow_rebase_merge   = false
+  allow_squash_merge   = true
+  topics               = ["terraform", "terraform-module"]
+  vulnerability_alerts = false
   # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository#template-repositories
   template {
     owner      = "cloudeteer"
     repository = "terraform-module-template"
+  }
+}
+
+# https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_collaborators
+# token permissions:
+# - repo
+# - read:org
+resource "github_repository_collaborators" "admins" {
+  repository = github_repository.repository.name
+  user {
+    permission = "admin"
+    username   = "lixhunter"
+  }
+  user {
+    permission = "admin"
+    username   = "rswrz"
+  }
+  user {
+    permission = "admin"
+    username   = "Phil-Thoennissen"
   }
 }
 
