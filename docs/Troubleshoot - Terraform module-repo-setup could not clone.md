@@ -41,7 +41,9 @@ To resolve this issue you need to import the existing repository into the Terraf
 
 ---
 1. Navigate to `terraform`-folder in the repository.
-2. Import the existing repository into the Terraform state.
+2. Either
+   - Import the existing repository into the Terraform state.
+   - OR add repo to `terraform/import.tf`
 
 ```bash
 tofu import 'module.github_repository["terraform-test-autocreated1"].github_repository.repository' terraform-test-autocreated1
