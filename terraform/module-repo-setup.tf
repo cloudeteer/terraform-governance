@@ -27,7 +27,7 @@ provider "github" {
 }
 
 data "github_repositories" "repositories" {
-  query = "org:cloudeteer topic:terraform-module"
+  query = "org:cloudeteer topic:terraform-module topic:auto-terraform-governance"
 }
 
 output "terraform_module_repositories" {
@@ -36,6 +36,25 @@ output "terraform_module_repositories" {
       var.create_repo != null && var.create_repo != "" ? tolist([var.create_repo]) : []
   ))
 }
+
+# https://developer.hashicorp.com/terraform/language/import
+### works, but have to be a loop
+# import {
+#   id = "terraform-test-autocreated1"
+#   to = module.github_repository["terraform-test-autocreated1"].github_repository.repository
+# }
+
+### import not working
+# data "template_file" "import" {
+#   template = file("${path.module}/import.tf.tpl")
+#   vars = {
+#     repository_names = join(", ", data.github_repositories.repositories.names)
+#   }
+# }
+# resource "local_file" "import" {
+#   content  = data.template_file.import.rendered
+#   filename = "${path.module}/import.tf"
+# }
 
 module "github_repository" {
   source = "./modules/github_repository"
