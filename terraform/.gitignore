@@ -36,3 +36,4 @@ terraform.rc
 # Ignore CI generated files
 .terraform.lock.hcl
 pipeline.auto.tfvars
+import.tf
