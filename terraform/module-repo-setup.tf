@@ -31,11 +31,17 @@ data "github_repositories" "repositories" {
 }
 
 output "terraform_module_repositories" {
-  value = toset(concat(data.github_repositories.repositories.names, coalesce(var.create_repos, [])))
+  value = toset(concat(
+    data.github_repositories.repositories.names,
+      var.create_repo != null && var.create_repo != "" ? tolist([var.create_repo]) : []
+  ))
 }
 
 module "github_repository" {
   source = "./modules/github_repository"
-  for_each = toset(concat(data.github_repositories.repositories.names, coalesce(var.create_repos, [])))
+  for_each = toset(concat(
+    data.github_repositories.repositories.names,
+      var.create_repo != null && var.create_repo != "" ? tolist([var.create_repo]) : []
+  ))
   repository_name = each.value
 }

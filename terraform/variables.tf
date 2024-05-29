@@ -5,8 +5,8 @@ variable "github_token" {
   sensitive   = true
 }
 
-variable "create_repos" {
-  description = "List of repositories to create"
-  type        = list(string)
-  default     = []
+variable "create_repo" {
+  description = "A repository name to create"
+  type        = string
+  default     = ""
 }

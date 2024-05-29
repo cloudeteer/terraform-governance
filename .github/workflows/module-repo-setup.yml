@@ -138,7 +138,7 @@ env:
   #language=hcl
   TFVARS_FILE: |
     github_token = "${{ secrets.MANAGE_REPOS_GITHUB_TOKEN }}"
-    create_repos = ${{ toJson(inputs.create_repo) }}
+    create_repo = ${{ toJson(inputs.create_repo) }}
   # secret MANAGE_REPOS_GITHUB_TOKEN == Keeper/GitHub cloudeteerbot/terraform-governance-managed-repos (https://keepersecurity.eu/vault/#detail/4y33tgsK_Yuv8mJUXDUPrQ)
 
 concurrency:
