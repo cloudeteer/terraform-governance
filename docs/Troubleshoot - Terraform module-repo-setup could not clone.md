@@ -40,17 +40,18 @@ The error message `Could not clone: Name already exists on this account` indicat
 To resolve this issue you need to import the existing repository into the Terraform state.
 
 ---
-1. Navigate to `terraform`-folder in the repository.
-2. Either
+1. prepare Project in Github:
+   1. add topics "terraform-module,auto-terraform-governance" to repository
+   2. add collaborator "cloudeteerbot" with admin permission to repository
+2. in terraform-governance code: Navigate to `terraform`-folder in the repository.
+3. Either
    - Import the existing repository into the Terraform state.
+     ```bash
+     # only github_repository is needed, so terraform doesn't try to create it
+     tofu import 'module.github_repository["terraform-test-autocreated1"].github_repository.repository' terraform-test-autocreated1
+     ```
    - OR add repo to `terraform/import.tf`
-
-```bash
-tofu import 'module.github_repository["terraform-test-autocreated1"].github_repository.repository' terraform-test-autocreated1
-tofu import 'module.github_repository["terraform-test-autocreated1"].github_branch.branch_main' terraform-test-autocreated1:main
-tofu import 'module.github_repository["terraform-test-autocreated1"].github_branch_default.branch_default' terraform-test-autocreated1
-```
-
+4. commit and run module-repo-setup action in Github
 ---
 
 ## Related articles

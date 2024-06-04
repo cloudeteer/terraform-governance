@@ -46,9 +46,3 @@ apply: ## run terragrunt apply for all levels
 .PHONY: destroy
 destroy: ## run terragrunt destroy for all levels
 	tofu destroy
-
-.PHONY: importRepo
-importRepo: ## Import the repository into the Azure DevOps
-	tofu import 'module.github_repository["terraform-test-autocreated1"].github_repository.repository' terraform-test-autocreated1
-	tofu import 'module.github_repository["terraform-test-autocreated1"].github_branch.branch_main' terraform-test-autocreated1:main
-	tofu import 'module.github_repository["terraform-test-autocreated1"].github_branch_default.branch_default' terraform-test-autocreated1

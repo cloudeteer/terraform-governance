@@ -49,21 +49,21 @@ env:
   TERRAFORM_LOCKFILE: |
     # This file is maintained automatically by "tofu init".
     # Manual edits may be lost in future updates.
-      
+    
     provider "registry.opentofu.org/hashicorp/azurerm" {
-      version = "3.105.0"
+      version = "3.106.1"
       hashes = [
-      "h1:OEMCsNLeyQRhX/RruOQLe84OLrZf7O5xmNmEAphJUl0=",
-      "zh:00748b89bacd4c08d38727046007ad2a699277972f4f8f5ba640150c5e053fb2",
-      "zh:1876ef996d50d5242961f289f67fcf63d3c94a91f1f2dde29f9ddc7ef1e5ed9b",
-      "zh:21fc2fb446891d8eb041afb173bbd953ce0a7042a48095ae0a21fb9de708d8c2",
-      "zh:72510c9806e44d9eb990cc43673a8a943f721c5a3367b7071ddc800b45fc1240",
-      "zh:95a08c75adf1507c3a44ddb7609716737137a1d693cc6684ad099f57110b5e08",
-      "zh:a521a6f9225a0a38efb29a279a5c518018f396baa4b4d8dd4167fc4b6395096e",
-      "zh:b751de9866ee9dd8612a8679d13c67da18ce8348159155c9a0b5a9fc61a3cee2",
-      "zh:b908a5ca19b73d731c581bfe77aa090d674b028f8a5cce4244a06c5c688d9adb",
-      "zh:e86b4bec22eef7596b4411e09b923635a11a3144567ae0e86c4050bca1e1729f",
-      "zh:ee3df966d8a50441dba12bf64063eb91c1ee2f0e4ebe1abee0322f9a9126318c",
+      "h1:zBWmKZm5NBvzviwnOHxEE67BVxZcdHd1yOVtHTx0xgo=",
+      "zh:01e1f709ae0cefe165a055f3f73812e47597676d450bb0c9a7314a9769cf5528",
+      "zh:066cb027db26646a831d4576b3d54a8d900bf204535199f5b718d68b8e77d0c9",
+      "zh:4e835ac86909ad8da7d12761cafe23ce32861837da935b4e2bcdb663da17f01e",
+      "zh:570ceed706f9857f40eda102bfea676525e5a07ab27e8a87c053b01f7be22c83",
+      "zh:66321269984b5c9136368099ffef10d9c88a3c0ac21701fd816ab7504ea30a0c",
+      "zh:80f64f92e86fb084f80c06245e92384032d102bbf5a7fc1f863cff2613943d3e",
+      "zh:8d41fde291325ae0ba8511610dd2c1b0c84cfa1d12477265dc3bf35fe5cc543e",
+      "zh:ad33414307f00ae417c6c86523c1c7a7ad5a07b9e734759ee0bc6f842cc30513",
+      "zh:dc0d84260882691d5f2b5aaa536b0790f80389f502f040043ce54b535e8cbc5e",
+      "zh:f365a34dacd4b6c1c8696326f04206a2b9b08da3b3a6e59f8563429026c0744b",
       ]
     }
       
