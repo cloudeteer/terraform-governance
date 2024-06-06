@@ -1,0 +1,11 @@
+name: module-ci
+on: workflow_call
+jobs:
+  validate:
+    uses: ./.github/workflows/module-ci-validate.yaml
+
+  documentation:
+    uses: ./.github/workflows/module-ci-documentation.yaml
+
+  code-analysis:
+    uses: ./.github/workflows/module-ci-code-analysis.yaml

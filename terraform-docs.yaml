@@ -1,0 +1,29 @@
+formatter: markdown
+
+settings:
+  anchor: false
+  lockfile: false
+
+output:
+  file: README.md
+
+sort:
+  enabled: true
+  by: name
+
+content: |-
+  ## Usage
+
+  ```hcl
+  {{ include "examples/main/usage.tf" }}
+  ```
+
+  {{ .Providers }}
+
+  {{ .Modules }}
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}

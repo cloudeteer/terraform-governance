@@ -1,0 +1,18 @@
+name: module-ci-code-analysis
+on: workflow_call
+
+jobs:
+  code-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Misconfiguration & Secret Scanner
+        uses: aquasecurity/trivy-action@0.21.0
+        with:
+          exit-code: "1"
+          ignore-unfixed: true
+          scan-type: fs
+          scanners: config,secret
+          severity: CRITICAL,HIGH
