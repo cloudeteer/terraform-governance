@@ -8,11 +8,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-tags: true
+          fetch-depth: 0
 
       - name: Calculate new SemVer tag
         id: tag
-        run: |
+        run: | #shell
+          git fetch --force --tags
           prev_tag=$(git describe --tags --abbrev=0 --match "v*.*.*" 2>/dev/null || printf 'v0.0.0')
 
           while IFS= read -r pull_request_number; do
