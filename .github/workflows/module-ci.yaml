@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/module-ci-code-analysis.yaml
 
   release:
-    if: github.ref == 'main'
+    if: github.ref_name == 'main'
     needs: [validate, documentation, code-analysis]
     uses: ./.github/workflows/module-ci-release.yaml
