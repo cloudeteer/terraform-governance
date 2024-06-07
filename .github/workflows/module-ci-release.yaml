@@ -40,6 +40,8 @@ jobs:
         env:
           tag: ${{ steps.tag.outputs.tag }}
         run: |
+          git config --global user.email "cloudeteerbot@cloudeteer.de"
+          git config --global user.name "cloudeteerbot"
           git tag -a "$tag" -m "$tag"
           git push origin "$tag"
 
