@@ -1,0 +1,12 @@
+name: module-ci-pull-request
+on: workflow_call
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mheap/github-action-required-labels@v5
+        with:
+          mode: exactly
+          count: 1
+          labels: "breaking,feature,fix,other,documentation,ignore-for-release"

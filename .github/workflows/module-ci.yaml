@@ -1,6 +1,10 @@
 name: module-ci
 on: workflow_call
 jobs:
+  pull-request:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/module-ci-pull-request.yaml
+
   validate:
     uses: ./.github/workflows/module-ci-validate.yaml
 
