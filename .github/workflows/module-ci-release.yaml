@@ -1,0 +1,53 @@
+name: module-ci-release
+on: workflow_call
+jobs:
+  release:
+    name: Release pushed tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Calculate new SemVer tag
+        id: tag
+        run: |
+          prev_tag=$(git describe --tags --abbrev=0 --match "v*.*.*" 2>/dev/null || printf 'v0.0.0')
+
+          while IFS= read -r pull_request_number; do
+            echo "Getting labels for PR $pull_request_number"
+            labels=$(gh pr view "${pull_request_number#\#}" --json labels --jq '.labels[].name')
+            echo "--> $labels"
+            if echo "$labels" | grep -w -q "breaking"; then
+              echo 'Found "breaking" label, will do major release and skip searching for other labels.'
+              new_tag=$(echo "${prev_tag#v}" | awk -F. '{print "v"$1+1".0.0"}')
+              break
+            elif echo "$labels" | grep -w -q "feature"; then
+              echo 'Found "feature" label, will do minor release if no breaking change in further labels found.'
+              new_tag=$(echo "${prev_tag#v}" | awk -F. '{print "v"$1"."$2+1".0"}')
+            fi
+          done < <(git log --pretty=format:%s "$prev_tag"..@ | grep -o -E '#\d+')
+
+          if [ -z "$new_tag" ]; then
+            echo 'No special labels found, will do patch release'
+            new_tag=$(echo "${prev_tag#v}" | awk -F. '{print "v"$1"."$2"."$3+1}')
+          fi
+
+          echo "tag=$new_tag" >>$GITHUB_OUTPUT
+
+      - name: Push tag
+        env:
+          tag: ${{ steps.tag.outputs.tag }}
+        run: |
+          git tag -a "$tag" -m "$tag"
+          git push origin "$tag"
+
+      - name: Create release
+        env:
+          tag: ${{ steps.tag.outputs.tag }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="$tag" \
+              --generate-notes
