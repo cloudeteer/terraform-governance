@@ -50,6 +50,7 @@ jobs:
       - name: Create release
         env:
           tag: ${{ steps.tag.outputs.tag }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
