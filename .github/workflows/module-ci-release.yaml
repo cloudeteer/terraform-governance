@@ -2,7 +2,6 @@ name: module-ci-release
 on: workflow_call
 jobs:
   release:
-    name: Release pushed tag
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
