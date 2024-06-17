@@ -6,8 +6,20 @@ Filename: `./github/workflows/module-ci.yaml`
 
 ```yaml
 name: module-ci
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - labeled
+      - unlabeled
 jobs:
   module-ci:
     uses: cloudeteer/terraform-governance/.github/workflows/module-ci.yaml@main
+    permissions:
+      contents: write
 ```
