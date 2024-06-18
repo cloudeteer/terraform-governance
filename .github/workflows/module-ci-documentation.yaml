@@ -22,5 +22,17 @@ jobs:
 
           ref: 349-epic-the-revival-of-tf-mod-lib
 
+      - name: Compare terraform-docs configuration files
+        continue-on-error: true
+        run: |
+          diff -u .terraform-governance/terraform-docs.yaml .terraform-docs.yaml
+          result=$?
+
+          if [ $result -eq 1 ]; then
+            echo "::warning::Your local .terraform-docs.yaml file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
+          elif [ $result -ge 1 ]; then
+            exit $result
+          fi
+
       - name: Check for diff in terraform-docs
         run: terraform-docs . --config .terraform-governance/terraform-docs.yaml --output-check
