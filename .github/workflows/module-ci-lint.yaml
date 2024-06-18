@@ -1,0 +1,35 @@
+name: module-ci-lint
+on: workflow_call
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container:
+      image: hashicorp/terraform:1.8
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout source code
+
+      - name: Checkout terraform-docs.yaml
+        uses: actions/checkout@v4
+        with:
+          path: .terraform-governance
+          repository: cloudeteer/terraform-governance
+          sparse-checkout-cone-mode: false
+          sparse-checkout: tflint.hcl
+
+          ref: 349-epic-the-revival-of-tf-mod-lib
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Show version
+        run: tflint --version
+
+      - name: Init TFLint
+        run: tflint --init --config=.terraform-governance/tflint.hcl
+        env:
+          # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run TFLint
+        run: tflint --format=compact --config=.terraform-governance/tflint.hcl
