@@ -9,11 +9,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check Format
-        run: |
-          terraform fmt -check -recursive -diff -write=false
+      - name: terraform init
+        run: terraform init -backend=false
 
-      - name: Validate Code
-        run: |
-          terraform init -backend=false
-          terraform validate
+      - name: terraform fmt
+        run: terraform fmt -check -recursive -diff -write=false
+
+      - name: terraform validate
+        run: terraform validate
+
+      - name: terraform test
+        run: terraform test
