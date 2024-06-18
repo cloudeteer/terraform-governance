@@ -15,7 +15,7 @@ content: |-
   ## Usage
 
   ```hcl
-  {{ include "examples/main/usage.tf" }}
+  {{ include "examples/usage/main.tf" }}
   ```
 
   {{ .Providers }}
