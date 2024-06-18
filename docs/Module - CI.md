@@ -22,4 +22,5 @@ jobs:
     uses: cloudeteer/terraform-governance/.github/workflows/module-ci.yaml@main
     permissions:
       contents: write
+      pull-requests: read
 ```

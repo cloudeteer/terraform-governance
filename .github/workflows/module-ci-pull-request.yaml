@@ -4,6 +4,8 @@ on: workflow_call
 jobs:
   pull-request:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - uses: mheap/github-action-required-labels@v5
         with:
