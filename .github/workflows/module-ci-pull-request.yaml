@@ -11,4 +11,4 @@ jobs:
         with:
           mode: exactly
           count: 1
-          labels: "breaking,feature,fix,other,documentation,ignore-for-release"
+          labels: "breaking-change,feature,fix,other,ignore-release"

@@ -27,8 +27,8 @@ jobs:
             echo "Getting labels for PR $pull_request_number"
             labels=$(gh pr view "${pull_request_number#\#}" --json labels --jq '.labels[].name')
             echo "--> $labels"
-            if echo "$labels" | grep -w -q "breaking"; then
-              echo 'Found "breaking" label, will do major release and skip searching for other labels.'
+            if echo "$labels" | grep -w -q "breaking-change"; then
+              echo 'Found "breaking-change" label, will do major release and skip searching for other labels.'
               new_tag=$(echo "${prev_tag#v}" | awk -F. '{print "v"$1+1".0.0"}')
               break
             elif echo "$labels" | grep -w -q "feature"; then
