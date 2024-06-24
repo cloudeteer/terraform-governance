@@ -26,10 +26,24 @@ body:
     attributes:
       label: General Information
       description: |
-        Add general information about the module here.
+        Add general information about the module here. What is your goal?
         (Short description, Use-cases, links to related issues, etc.)
       value: |
         ## General Information
 
     validations:
       required: true
+
+  - type: textarea
+    id: input-variable
+    attributes:
+      label: Input Variables
+      description: |
+        List all Input Variable you will need for sure? There is no guarantee that all inputs will be part of the module.
+        Please always start the tasks with `- [ ] `
+      value: |
+        ## Input Variables
+        - [ ] Variable 1
+        - [ ] Variable 2
+        - [ ] Variable 3
+      render: '[tasklist]'
