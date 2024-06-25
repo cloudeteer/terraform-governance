@@ -73,3 +73,33 @@ resource "github_branch_default" "branch_default" {
   repository = github_repository.repository.name
   branch     = github_branch.branch_main.branch
 }
+
+resource "github_issue_label" "fix" {
+  repository = github_repository.repository.name
+  name       = "fix"
+  color      = "d73a4a"
+}
+
+resource "github_issue_label" "feature" {
+  repository = github_repository.repository.name
+  name       = "feature"
+  color      = "a2eeef"
+}
+
+resource "github_issue_label" "breaking_change" {
+  repository = github_repository.repository.name
+  name       = "breaking-change"
+  color      = "b60205"
+}
+
+resource "github_issue_label" "ignore_release" {
+  repository = github_repository.repository.name
+  name       = "ignore-release"
+  color      = "e4e669"
+}
+
+resource "github_issue_label" "other" {
+  repository = github_repository.repository.name
+  name       = "other"
+  color      = "cfd3d7"
+}
