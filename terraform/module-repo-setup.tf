@@ -6,8 +6,8 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "rg-tfstates-westeurope-001"
-    storage_account_name = "stcdtoetfstate"
+    resource_group_name  = "rg-terraform-governance"
+    storage_account_name = "sttfgovernancestate"
     container_name       = "terraform-governance"
     key                  = "module-repo-setup/terraform.tfstate"
   }
@@ -20,7 +20,6 @@ provider "azurerm" {
 }
 
 provider "github" {
-  token = var.github_token
   owner = "cloudeteer"
 }
 
@@ -31,7 +30,7 @@ data "github_repositories" "repositories" {
 output "terraform_module_repositories" {
   value = toset(concat(
     data.github_repositories.repositories.names,
-      var.create_repo != null && var.create_repo != "" ? tolist([var.create_repo]) : []
+    tolist(contains([null, "", "null"], var.create_repo) ? [] : [var.create_repo])
   ))
 }
 
@@ -39,7 +38,7 @@ module "github_repository" {
   source = "./modules/github_repository"
   for_each = toset(concat(
     data.github_repositories.repositories.names,
-      var.create_repo != null && var.create_repo != "" ? tolist([var.create_repo]) : []
+    tolist(contains([null, "", "null"], var.create_repo) ? [] : [var.create_repo])
   ))
   repository_name = each.value
 }

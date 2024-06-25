@@ -23,8 +23,13 @@ help: ## show this help.
 
 .PHONY: create-terraform-state-container
 create-terraform-state-container: ## create storage account container for terraform state
-	echo 'Setup Storage Container for Terraform in stcdtoetfstate subscription: CDT Sponsored Gold OE-CHAPTER' && \
-	SUBSCRIPTION_ID=a78e11bf-66d8-4aae-b171-cc43ced4e6ca az storage container create -o table --name terraform-governance --account-name stcdtoetfstate --subscription $$SUBSCRIPTION_ID
+	export SUBSCRIPTION_ID=a78e11bf-66d8-4aae-b171-cc43ced4e6ca && \
+	export RESOURCE_GROUP_NAME=rg-terraform-governance && \
+	export STORAGE_ACCOUNT_NAME=sttfgovernancestate && \
+	echo 'Setup Storage Account for Terraform' && \
+    az storage account create -o table --resource-group "$$RESOURCE_GROUP_NAME" --name "$$STORAGE_ACCOUNT_NAME" --sku Standard_ZRS --encryption-services blob --subscription $$SUBSCRIPTION_ID && \
+	echo 'Setup Storage Container for Terraform in subscription: CDT Sponsored Gold OE-CHAPTER' && \
+	az storage container create -o table --name terraform-governance --account-name $$STORAGE_ACCOUNT_NAME --subscription $$SUBSCRIPTION_ID
 
 .PHONY: init
 init: ## Initialize the directory only where the command is being used.
