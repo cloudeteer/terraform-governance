@@ -1,0 +1,49 @@
+name: New Module
+description: File a new module issue
+title: "<Module Title>"
+labels: ["module"]
+body:
+  - type: markdown
+    attributes:
+      value: Provide a general summary of the module in the Title above.
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: For which Cloud provider do you need the module?
+      options:
+        - Microsoft Azure
+        - Google Cloud
+        - Amazon Web Services (AWS)
+        - Alibaba Cloud
+        - Hetzner Cloud
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: general-information
+    attributes:
+      label: General Information
+      description: |
+        Add general information about the module here. What is your goal?
+        (Short description, Use-cases, links to related issues, etc.)
+      value: |
+        ## General Information
+
+    validations:
+      required: true
+
+  - type: textarea
+    id: input-variable
+    attributes:
+      label: Input Variables
+      description: |
+        List all Input Variable you will need for sure? There is no guarantee that all inputs will be part of the module.
+        Please always start the tasks with `- [ ] `
+      value: |
+        ## Input Variables
+        - [ ] Variable 1
+        - [ ] Variable 2
+        - [ ] Variable 3
+      render: '[tasklist]'
