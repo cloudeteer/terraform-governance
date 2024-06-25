@@ -1,0 +1,38 @@
+name: module-ci-documentation
+on: workflow_call
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/terraform-docs/terraform-docs:0.16.0
+    steps:
+      - name: Install prerequisites
+        run: apk add git
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout terraform-docs.yaml
+        uses: actions/checkout@v4
+        with:
+          path: .terraform-governance
+          repository: cloudeteer/terraform-governance
+          sparse-checkout-cone-mode: false
+          sparse-checkout: terraform-docs.yaml
+
+          ref: 349-epic-the-revival-of-tf-mod-lib
+
+      - name: Compare terraform-docs configuration files
+        continue-on-error: true
+        run: |
+          diff -u .terraform-governance/terraform-docs.yaml .terraform-docs.yaml
+          result=$?
+
+          if [ $result -eq 1 ]; then
+            echo "::warning::Your local .terraform-docs.yaml file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
+          elif [ $result -ge 1 ]; then
+            exit $result
+          fi
+
+      - name: Check for diff in terraform-docs
+        run: terraform-docs . --config .terraform-governance/terraform-docs.yaml --output-check

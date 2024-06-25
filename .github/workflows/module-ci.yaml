@@ -1,0 +1,23 @@
+name: module-ci
+on: workflow_call
+jobs:
+  pull-request:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/module-ci-pull-request.yaml
+
+  validate:
+    uses: ./.github/workflows/module-ci-validate.yaml
+
+  lint:
+    uses: ./.github/workflows/module-ci-lint.yaml
+
+  documentation:
+    uses: ./.github/workflows/module-ci-documentation.yaml
+
+  code-analysis:
+    uses: ./.github/workflows/module-ci-code-analysis.yaml
+
+  release:
+    if: github.ref_name == 'main'
+    needs: [validate, lint, documentation, code-analysis]
+    uses: ./.github/workflows/module-ci-release.yaml

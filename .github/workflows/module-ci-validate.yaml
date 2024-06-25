@@ -1,0 +1,22 @@
+name: module-ci-validate
+on: workflow_call
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container:
+      image: hashicorp/terraform:1.8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: terraform init
+        run: terraform init -backend=false
+
+      - name: terraform fmt
+        run: terraform fmt -check -recursive -diff -write=false
+
+      - name: terraform validate
+        run: terraform validate
+
+      - name: terraform test
+        run: terraform test

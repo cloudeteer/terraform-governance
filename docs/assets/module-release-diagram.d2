@@ -1,0 +1,33 @@
+direction: right
+
+main
+developer.shape: person
+
+fix: {
+  style.multiple: true
+}
+
+feature: {
+  style.multiple: true
+}
+
+breaking-change: {
+  style.multiple: true
+}
+
+v1337: {
+  label: v1.33.7
+  shape: package
+  style.fill: lightgreen
+}
+
+fix -> main: merged as PR
+feature -> main: merged as PR
+breaking-change -> main: merged as PR
+
+main -> v1337: auto release on merge
+
+developer -> fix: push
+developer -> feature: push
+developer -> breaking-change: push
+developer -> main: hotfix push\n(In general not allowed)
