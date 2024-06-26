@@ -37,7 +37,7 @@ env:
   # https://developer.hashicorp.com/terraform/cli/commands#upgrade-and-security-bulletin-checks
   CHECKPOINT_DISABLE: true
   GITHUB_TOKEN: ${{ secrets.MANAGE_REPOS_GITHUB_TOKEN }}
-  TF_VAR_create_repo: ${{ toJson(inputs.create_repo) }}
+  TF_VAR_create_repo: ${{ inputs.create_repo }}
   # secret MANAGE_REPOS_GITHUB_TOKEN == Keeper/GitHub cloudeteerbot/terraform-governance-managed-repos (https://keepersecurity.eu/vault/#detail/4y33tgsK_Yuv8mJUXDUPrQ)
 
 concurrency:
