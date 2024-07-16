@@ -16,8 +16,8 @@ terraform {
 resource "github_repository" "repository" {
   name                 = var.repository_name
   visibility           = "private"
-  has_discussions      = false
-  has_issues           = false
+  has_discussions      = true
+  has_issues           = true
   has_projects         = false
   has_wiki             = false
   has_downloads        = false
