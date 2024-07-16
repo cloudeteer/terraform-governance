@@ -18,23 +18,32 @@ data "github_repository" "existing_repo" {
 }
 
 locals {
-  repository_exists = try(data.github_repository.existing_repo[0].full_name, "") != ""
+  visibility = try(data.github_repository.existing_repo[0].visibility, "private")
+  description = try(data.github_repository.existing_repo[0].description, "Terraform module for ${var.repository_name}")
+  combined_topics = concat(
+    try(data.github_repository.existing_repo[0].topics, []),
+    ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
+  )
+  homepage_url = try(data.github_repository.existing_repo[0].homepage_url, null)
 }
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
 resource "github_repository" "repository" {
-  name                 = var.repository_name
-  visibility           = local.repository_exists ? data.github_repository.existing_repo[0].visibility : "private"
-  has_discussions      = true
-  has_issues           = true
-  has_projects         = false
-  has_wiki             = false
-  has_downloads        = false
-  allow_merge_commit   = false
-  allow_rebase_merge   = false
-  allow_squash_merge   = true
-  topics               = ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
-  vulnerability_alerts = true
+  name                   = var.repository_name
+  visibility             = local.visibility
+  description            = local.description
+  has_discussions        = true
+  has_issues             = true
+  has_projects           = false
+  has_wiki               = false
+  has_downloads          = false
+  allow_merge_commit     = false
+  allow_rebase_merge     = false
+  allow_squash_merge     = true
+  topics                 = local.combined_topics
+  homepage_url           = local.homepage_url
+  vulnerability_alerts   = true
+  delete_branch_on_merge = true
   # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository#template-repositories
   template {
     owner      = "cloudeteer"
