@@ -24,7 +24,7 @@ resource "github_repository" "repository" {
   allow_merge_commit   = false
   allow_rebase_merge   = false
   allow_squash_merge   = true
-  topics               = ["terraform", "terraform-module", "auto-terraform-governance"]
+  topics               = ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
   vulnerability_alerts = true
   # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository#template-repositories
   template {
