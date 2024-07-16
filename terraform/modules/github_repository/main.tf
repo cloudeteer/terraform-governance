@@ -12,10 +12,19 @@ terraform {
   }
 }
 
+data "github_repository" "existing_repo" {
+  count     = 1
+  full_name = "cloudeteer/${var.repository_name}"
+}
+
+locals {
+  repository_exists = try(data.github_repository.existing_repo[0].full_name, "") != ""
+}
+
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
 resource "github_repository" "repository" {
   name                 = var.repository_name
-  visibility           = "private"
+  visibility           = local.repository_exists ? data.github_repository.existing_repo[0].visibility : "private"
   has_discussions      = true
   has_issues           = true
   has_projects         = false
