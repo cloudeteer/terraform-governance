@@ -24,7 +24,7 @@ locals {
     try(data.github_repository.existing_repo[0].topics, []),
     ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
   )
-  homepage_url = try(data.github_repository.existing_repo[0].homepage_url, null)
+  homepage_url = try(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
 }
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
