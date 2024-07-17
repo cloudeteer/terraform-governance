@@ -20,8 +20,6 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: terraform-docs.yaml
 
-          ref: 349-epic-the-revival-of-tf-mod-lib
-
       - name: Compare terraform-docs configuration files
         continue-on-error: true
         run: |
