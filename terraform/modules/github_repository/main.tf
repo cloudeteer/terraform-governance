@@ -67,6 +67,10 @@ resource "github_repository_collaborators" "admins" {
   }
   user {
     permission = "admin"
+    username   = "cloudeteerbot"
+  }
+  user {
+    permission = "admin"
     username   = "lixhunter"
   }
   user {
