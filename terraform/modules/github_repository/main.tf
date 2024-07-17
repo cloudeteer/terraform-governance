@@ -18,7 +18,7 @@ data "github_repository" "existing_repo" {
 }
 
 locals {
-  visibility = try(data.github_repository.existing_repo[0].visibility, "private")
+  visibility  = try(data.github_repository.existing_repo[0].visibility, "private")
   description = try(data.github_repository.existing_repo[0].description, "Terraform module for ${var.repository_name}")
   combined_topics = concat(
     try(data.github_repository.existing_repo[0].topics, []),
@@ -61,10 +61,6 @@ resource "github_repository_collaborators" "admins" {
   team {
     permission = "admin"
     team_id    = "service-accounts" # id: 6206668
-  }
-  user {
-    permission = "admin"
-    username   = "cloudeteerbot"
   }
   user {
     permission = "admin"
