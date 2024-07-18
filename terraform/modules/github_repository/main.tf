@@ -12,20 +12,41 @@ terraform {
   }
 }
 
+data "github_repository" "existing_repo" {
+  count     = 1
+  full_name = "cloudeteer/${var.repository_name}"
+}
+
+locals {
+  provider           = split("-", var.repository_name)[2]
+  provider_formatted = local.provider == "azurerm" ? "AzureRM" : (local.provider == "aws" ? "AWS" : local.provider)
+  module_name        = split("-", var.repository_name)[1]
+  visibility         = try(data.github_repository.existing_repo[0].visibility, "private")
+  description        = try(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module ")
+  combined_topics = concat(
+    try(data.github_repository.existing_repo[0].topics, []),
+    ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
+  )
+  homepage_url = try(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
+}
+
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
 resource "github_repository" "repository" {
-  name                 = var.repository_name
-  visibility           = "private"
-  has_discussions      = false
-  has_issues           = false
-  has_projects         = false
-  has_wiki             = false
-  has_downloads        = false
-  allow_merge_commit   = false
-  allow_rebase_merge   = false
-  allow_squash_merge   = true
-  topics               = ["terraform", "terraform-module", "auto-terraform-governance"]
-  vulnerability_alerts = true
+  name                   = var.repository_name
+  visibility             = local.visibility
+  description            = local.description
+  has_discussions        = true
+  has_issues             = true
+  has_projects           = false
+  has_wiki               = false
+  has_downloads          = false
+  allow_merge_commit     = false
+  allow_rebase_merge     = false
+  allow_squash_merge     = true
+  topics                 = local.combined_topics
+  homepage_url           = local.homepage_url
+  vulnerability_alerts   = true
+  delete_branch_on_merge = true
   # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository#template-repositories
   template {
     owner      = "cloudeteer"
