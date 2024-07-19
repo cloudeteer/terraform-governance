@@ -16,7 +16,7 @@ terraform {
 provider "azurerm" {
   features {}
   skip_provider_registration = true
-  partner_id = "1782f57c-edb6-4bf8-bd26-c7e0ef75c1e8"
+  partner_id                 = "1782f57c-edb6-4bf8-bd26-c7e0ef75c1e8"
 }
 
 provider "github" {
