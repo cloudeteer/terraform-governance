@@ -24,7 +24,7 @@ provider "github" {
 }
 
 data "github_repositories" "repositories" {
-  query = "org:cloudeteer topic:terraform-module topic:auto-terraform-governance"
+  query = "org:cloudeteer topic:auto-terraform-governance"
 }
 
 output "terraform_module_repositories" {
