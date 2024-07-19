@@ -10,6 +10,11 @@ import {
 }
 
 import {
+  id = "terraform-governance"
+  to = module.github_repository["terraform-governance"].github_repository.repository
+}
+
+import {
   id = "terraform-azurerm-helloworld"
   to = module.github_repository["terraform-azurerm-helloworld"].github_repository.repository
 }
