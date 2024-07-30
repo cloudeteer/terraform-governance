@@ -28,7 +28,7 @@ Step-by-step guide:
 
 ### OpenTofu Registry
 
-Follow the module publishing notes at <https://github.com/opentofu/registry/>. At the time of writing this documentation, the steps are:
+Follow the module publishing notes at <https://opentofu.org/docs/language/modules/develop/publish/>. At the time of writing this documentation, the steps are:
 
 1. Create a GitHub issue "Submit new Module" in <https://github.com/opentofu/registry/> filling out all required fields.
 2. Wait for the request to be processed and approved. A pull request will be created and merged.
