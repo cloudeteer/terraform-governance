@@ -7,6 +7,10 @@ tags:
 
 This documentation describes how to publish a Terraform module and release new versions.
 
+## Prerequisites
+
+- A GitHub public repository in the name format `terraform-<PROVIDER>-<NAME>` ([details](https://developer.hashicorp.com/terraform/registry/modules/publish#requirements))
+
 ## Publish a Module
 
 ### Terraform Registry
