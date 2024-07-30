@@ -45,4 +45,4 @@ Official HashiCorp documentation: <https://developer.hashicorp.com/terraform/reg
 
 ### OpenTofu Registry
 
-<TBD>
+Once a module is registered in the OpenTofu registry, OpenTofu automation will automatically monitor for new releases of the registered module. This is done by watching for new Git tags in Semantic Version format. Pushing such a tag will trigger a new release on OpenTofu, similar to how it works on Terraform. No further action is required from the module developers.
