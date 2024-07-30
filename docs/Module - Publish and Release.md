@@ -7,6 +7,10 @@ tags:
 
 This documentation describes how to publish a Terraform module and release new versions.
 
+## Prerequisites
+
+- A GitHub public repository in the name format `terraform-<PROVIDER>-<NAME>` ([details](https://developer.hashicorp.com/terraform/registry/modules/publish#requirements))
+
 ## Publish a Module
 
 ### Terraform Registry
@@ -28,7 +32,7 @@ Step-by-step guide:
 
 ### OpenTofu Registry
 
-Follow the module publishing notes at <https://github.com/opentofu/registry/>. At the time of writing this documentation, the steps are:
+Follow the module publishing notes at <https://opentofu.org/docs/language/modules/develop/publish/>. At the time of writing this documentation, the steps are:
 
 1. Create a GitHub issue "Submit new Module" in <https://github.com/opentofu/registry/> filling out all required fields.
 2. Wait for the request to be processed and approved. A pull request will be created and merged.
@@ -45,4 +49,4 @@ Official HashiCorp documentation: <https://developer.hashicorp.com/terraform/reg
 
 ### OpenTofu Registry
 
-<TBD>
+Once a module is registered in the OpenTofu registry, OpenTofu automation will automatically monitor for new releases of the registered module. This is done by watching for new Git tags in Semantic Version format. Pushing such a tag will trigger a new release on OpenTofu, similar to how it works on Terraform. No further action is required from the module developers.
