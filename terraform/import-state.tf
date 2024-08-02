@@ -5,11 +5,6 @@
 # 4. commit and run module-repo-setup action
 
 import {
-  id = "terraform-test-createnew3"
-  to = module.github_repository["terraform-test-createnew3"].github_repository.repository
-}
-
-import {
   id = "terraform-azurerm-helloworld"
   to = module.github_repository["terraform-azurerm-helloworld"].github_repository.repository
 }
