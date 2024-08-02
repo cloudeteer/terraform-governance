@@ -4,7 +4,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     container:
-      image: hashicorp/terraform:1.8
+      image: hashicorp/terraform:1.9
     steps:
       - uses: actions/checkout@v4
         name: Checkout source code

@@ -4,7 +4,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     container:
-      image: hashicorp/terraform:1.8
+      image: hashicorp/terraform:1.9
     steps:
       - name: Checkout
         uses: actions/checkout@v4
