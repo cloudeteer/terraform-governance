@@ -23,8 +23,9 @@ locals {
   module_name        = split("-", var.repository_name)[1]
   visibility         = try(data.github_repository.existing_repo[0].visibility, "private")
   description        = try(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module ")
+  existing_repo_topics = try(lookup(data.github_repository.existing_repo[0], "topics", []), [])
   combined_topics = concat(
-    try(data.github_repository.existing_repo[0].topics, []),
+    local.existing_repo_topics != null ? local.existing_repo_topics : [],
     ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
   )
   homepage_url = try(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
