@@ -27,8 +27,8 @@ We welcome pull requests for improvements. To ensure a smooth process, please:
    - Update the [README.md](../README.md) file with details about your changes
      and regenerate the Terraform documentation.
      ```bash
-     terraform-docs .
-     ``` 
+     terraform-docs . --config .terraform-docs.yaml
+     ```
    - Update examples in the [examples](../examples) directory and the
    [CHANGELOG.md](../CHANGELOG.md) to reflect your changes.
 2. **Sign Your Work**: Before committing your changes, ensure each commit message
@@ -66,6 +66,7 @@ everyone and aim to create a welcoming and inclusive environment.
 
 
 ## Need Help?
+
 If you have any questions or need assistance with contributing, don't hesitate to reach out to us. We're here to help and guide you through the process.
 
 Thank you for contributing to our Terraform modules! We appreciate your support and contributions.
