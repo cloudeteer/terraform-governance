@@ -20,15 +20,14 @@ data "github_repository" "existing_repo" {
 locals {
   provider           = split("-", var.repository_name)[2]
   provider_formatted = local.provider == "azurerm" ? "AzureRM" : (local.provider == "aws" ? "AWS" : local.provider)
-  module_name        = split("-", var.repository_name)[1]
-  visibility         = try(data.github_repository.existing_repo[0].visibility, "private")
-  description        = try(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module ")
-  existing_repo_topics = try(lookup(data.github_repository.existing_repo[0], "topics", []), [])
+  module_name = join("-", slice(split("-", var.repository_name), 2, length(split("-", var.repository_name))))
+  visibility = coalesce(data.github_repository.existing_repo[0].visibility, "public")
+  description = coalesce(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module")
   combined_topics = concat(
-    local.existing_repo_topics != null ? local.existing_repo_topics : [],
+    coalesce(data.github_repository.existing_repo[0].topics, []),
     ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
   )
-  homepage_url = try(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
+  homepage_url = coalesce(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
 }
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
@@ -52,6 +51,9 @@ resource "github_repository" "repository" {
   template {
     owner      = "cloudeteer"
     repository = "terraform-module-template"
+  }
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
