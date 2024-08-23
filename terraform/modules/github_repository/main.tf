@@ -19,7 +19,8 @@ data "github_repository" "existing_repo" {
 
 locals {
   provider           = split("-", var.repository_name)[2]
-  provider_formatted = local.provider == "azurerm" ? "AzureRM" : (local.provider == "aws" ? "AWS" : local.provider)
+  provider_formatted = (local.provider == "azurerm" ? "AzureRM" :
+    (local.provider == "aws" ? "AWS" : local.provider))
   module_name = join("-", slice(split("-", var.repository_name), 2, length(split("-", var.repository_name))))
   visibility = coalesce(data.github_repository.existing_repo[0].visibility, "public")
   description = coalesce(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module")
@@ -32,21 +33,22 @@ locals {
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
 resource "github_repository" "repository" {
-  name                   = var.repository_name
-  visibility             = local.visibility
-  description            = local.description
-  has_discussions        = true
-  has_issues             = true
-  has_projects           = false
-  has_wiki               = false
-  has_downloads          = false
-  allow_merge_commit     = false
-  allow_rebase_merge     = false
-  allow_squash_merge     = true
-  topics                 = local.combined_topics
-  homepage_url           = local.homepage_url
-  vulnerability_alerts   = true
-  delete_branch_on_merge = true
+  name                        = var.repository_name
+  visibility                  = local.visibility
+  description                 = local.description
+  has_discussions             = true
+  has_issues                  = true
+  has_projects                = false
+  has_wiki                    = false
+  has_downloads               = false
+  allow_merge_commit          = false
+  allow_rebase_merge          = false
+  allow_squash_merge          = true
+  topics                      = local.combined_topics
+  homepage_url                = local.homepage_url
+  vulnerability_alerts        = true
+  web_commit_signoff_required = true
+  delete_branch_on_merge      = true
   # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository#template-repositories
   template {
     owner      = "cloudeteer"
@@ -96,6 +98,39 @@ resource "github_branch" "branch_main" {
 resource "github_branch_default" "branch_default" {
   repository = github_repository.repository.name
   branch     = github_branch.branch_main.branch
+}
+
+#https://registry.terraform.io/providers/integrations/github/6.2.3/docs/resources/repository_ruleset
+resource "github_repository_ruleset" "ruleset_branch_default_protect" {
+  enforcement = "active"
+  target      = "branch"
+  repository  = github_repository.repository.name
+  name        = "protect default branch"
+  conditions {
+    ref_name {
+      exclude = []
+      include = ["~DEFAULT_BRANCH"]
+    }
+  }
+  rules {
+    deletion                = false
+    required_linear_history = true
+    required_signatures     = true
+    non_fast_forward        = true
+    pull_request {
+      dismiss_stale_reviews_on_push     = true
+      require_code_owner_review         = true
+      require_last_push_approval        = true
+      required_approving_review_count   = 1
+      required_review_thread_resolution = true
+    }
+    required_status_checks {
+      required_check {
+        context        = "*"
+      }
+      strict_required_status_checks_policy = true
+    }
+  }
 }
 
 resource "github_issue_label" "fix" {
