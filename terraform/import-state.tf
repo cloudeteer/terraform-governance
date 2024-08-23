@@ -8,3 +8,8 @@ import {
   id = "terraform-azurerm-helloworld"
   to = module.github_repository["terraform-azurerm-helloworld"].github_repository.repository
 }
+
+import {
+  id = "terraform-azurerm-mssql-vm"
+  to = module.github_repository["terraform-azurerm-mssql-vm"].github_repository.repository
+}

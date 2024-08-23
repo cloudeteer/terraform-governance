@@ -6,6 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
+    subscription_id      = "a78e11bf-66d8-4aae-b171-cc43ced4e6ca"
     resource_group_name  = "rg-terraform-governance"
     storage_account_name = "sttfgovernancestate"
     container_name       = "terraform-governance"
@@ -16,7 +17,7 @@ terraform {
 provider "azurerm" {
   features {}
   skip_provider_registration = true
-  partner_id = "1782f57c-edb6-4bf8-bd26-c7e0ef75c1e8"
+  partner_id                 = "1782f57c-edb6-4bf8-bd26-c7e0ef75c1e8"
 }
 
 provider "github" {
@@ -30,7 +31,8 @@ data "github_repositories" "repositories" {
 output "terraform_module_repositories" {
   value = toset(concat(
     data.github_repositories.repositories.names,
-    tolist(contains([null, "", "null"], var.create_repo) ? [] : [var.create_repo])
+    tolist(contains([null, "", "null"], var.create_repo) ? [] :
+      [var.create_repo])
   ))
 }
 
@@ -38,7 +40,8 @@ module "github_repository" {
   source = "./modules/github_repository"
   for_each = toset(concat(
     data.github_repositories.repositories.names,
-    tolist(contains([null, "", "null"], var.create_repo) ? [] : [var.create_repo])
+    tolist(contains([null, "", "null"], var.create_repo) ? [] :
+      [var.create_repo])
   ))
   repository_name = each.value
 }

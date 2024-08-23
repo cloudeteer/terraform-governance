@@ -36,18 +36,25 @@ init: ## Initialize the directory only where the command is being used.
 	tenv tofu detect
 	tofu init
 
+.PHONY: unlock
+unlock: ## Unlock the state file
+	@printf "Enter LOCK ID: "; read LOCK_ID; \
+	tofu force-unlock -force $$LOCK_ID
+
 .PHONY: validate
 validate: ## Validate terragrunt files + terraform level modules
-	tofu validate
+	@tofu validate
 
 .PHONY: plan
 plan: ## run terragrunt plan for all levels
+	@ARM_SUBSCRIPTION_ID=a78e11bf-66d8-4aae-b171-cc43ced4e6ca \
 	tofu plan
 
 .PHONY: apply
 apply: ## run terragrunt apply for all levels
+	@ARM_SUBSCRIPTION_ID=a78e11bf-66d8-4aae-b171-cc43ced4e6ca \
 	tofu apply
 
 .PHONY: destroy
 destroy: ## run terragrunt destroy for all levels
-	tofu destroy
+	@tofu destroy
