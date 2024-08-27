@@ -110,6 +110,11 @@ resource "github_repository_ruleset" "ruleset_branch_default_protect" {
   target      = "branch"
   repository  = github_repository.repository.name
   name        = "protect default branch"
+  bypass_actors {
+    actor_id    = 5
+    actor_type  = "RepositoryRole"
+    bypass_mode = "pull_request"
+  }
   conditions {
     ref_name {
       exclude = []
@@ -119,7 +124,7 @@ resource "github_repository_ruleset" "ruleset_branch_default_protect" {
   rules {
     deletion                = false
     required_linear_history = true
-    required_signatures     = true
+    required_signatures     = false
     non_fast_forward        = true
     pull_request {
       dismiss_stale_reviews_on_push     = true
@@ -130,7 +135,22 @@ resource "github_repository_ruleset" "ruleset_branch_default_protect" {
     }
     required_status_checks {
       required_check {
-        context        = "*"
+        context = "module-ci / code-analysis / code-analysis"
+      }
+      required_check {
+        context = "module-ci / documentation / documentation"
+      }
+      required_check {
+        context = "module-ci / lint / lint"
+      }
+      required_check {
+        context = "module-ci / pull-request / pull-request"
+      }
+      required_check {
+        context = "module-ci / validate / validate"
+      }
+      required_check {
+        context = "DCO"
       }
       strict_required_status_checks_policy = true
     }
