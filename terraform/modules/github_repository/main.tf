@@ -104,56 +104,29 @@ resource "github_branch_default" "branch_default" {
   branch     = github_branch.branch_main.branch
 }
 
-#https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_ruleset
-resource "github_repository_ruleset" "ruleset_branch_default_protect" {
-  enforcement = "active"
-  target      = "branch"
-  repository  = github_repository.repository.name
-  name        = "protect default branch"
-  bypass_actors {
-    actor_id    = 5
-    actor_type  = "RepositoryRole"
-    bypass_mode = "pull_request"
+# https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch_protection
+resource "github_branch_protection" "ruleset_branch_default_protect" {
+  //enforcement = "active"
+  //target      = "branch"
+  repository_id                   = github_repository.repository.name
+  pattern                         = "main"
+  required_linear_history         = true
+  require_conversation_resolution = true
+  required_status_checks {
+    strict = true
+    contexts = [
+      "DCO"
+    ]
   }
-  conditions {
-    ref_name {
-      exclude = []
-      include = ["~DEFAULT_BRANCH"]
-    }
+  required_pull_request_reviews {
+    dismiss_stale_reviews           = true
+    restrict_dismissals             = true
+    require_code_owner_reviews      = true
+    required_approving_review_count = 1
+    require_last_push_approval      = true
   }
-  rules {
-    deletion                = false
-    required_linear_history = true
-    required_signatures     = false
-    non_fast_forward        = true
-    pull_request {
-      dismiss_stale_reviews_on_push     = true
-      require_code_owner_review         = true
-      require_last_push_approval        = true
-      required_approving_review_count   = 1
-      required_review_thread_resolution = true
-    }
-    required_status_checks {
-      required_check {
-        context = "module-ci / code-analysis / code-analysis"
-      }
-      required_check {
-        context = "module-ci / documentation / documentation"
-      }
-      required_check {
-        context = "module-ci / lint / lint"
-      }
-      required_check {
-        context = "module-ci / pull-request / pull-request"
-      }
-      required_check {
-        context = "module-ci / validate / validate"
-      }
-      required_check {
-        context = "DCO"
-      }
-      strict_required_status_checks_policy = true
-    }
+  restrict_pushes {
+    blocks_creations = true
   }
 }
 
