@@ -32,7 +32,7 @@ output "terraform_module_repositories" {
   value = toset(concat(
     data.github_repositories.repositories.names,
     tolist(contains([null, "", "null"], var.create_repo) ? [] :
-      [var.create_repo])
+    [var.create_repo])
   ))
 }
 
@@ -41,7 +41,7 @@ module "github_repository" {
   for_each = toset(concat(
     data.github_repositories.repositories.names,
     tolist(contains([null, "", "null"], var.create_repo) ? [] :
-      [var.create_repo])
+    [var.create_repo])
   ))
   repository_name = each.value
 }
