@@ -18,11 +18,11 @@ data "github_repository" "existing_repo" {
 }
 
 locals {
-  provider           = split("-", var.repository_name)[2]
+  provider = split("-", var.repository_name)[2]
   provider_formatted = (local.provider == "azurerm" ? "AzureRM" :
-    (local.provider == "aws" ? "AWS" : local.provider))
+  (local.provider == "aws" ? "AWS" : local.provider))
   module_name = join("-", slice(split("-", var.repository_name), 2, length(split("-", var.repository_name))))
-  visibility = coalesce(data.github_repository.existing_repo[0].visibility, "public")
+  visibility  = coalesce(data.github_repository.existing_repo[0].visibility, "public")
   description = coalesce(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module")
   combined_topics = concat(
     coalesce(data.github_repository.existing_repo[0].topics, []),
@@ -114,9 +114,6 @@ resource "github_branch_protection" "ruleset_branch_default_protect" {
   require_conversation_resolution = true
   required_status_checks {
     strict = true
-    contexts = [
-      "DCO"
-    ]
   }
   required_pull_request_reviews {
     dismiss_stale_reviews           = true
