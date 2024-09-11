@@ -1,0 +1,46 @@
+name: module-ci-test
+
+on:
+  workflow_call:
+    secrets:
+      ARM_CLIENT_ID:
+      ARM_SUBSCRIPTION_ID:
+      ARM_TENANT_ID:
+
+jobs:
+  test-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: terraform test examples
+        run: |
+          terraform init -test-directory=tests/examples
+          terraform test -test-directory=tests/examples
+
+  test-local:
+    runs-on: ubuntu-latest
+    steps:
+      - name: terraform test local
+        run: |
+          terraform init -test-directory=tests/local
+          terraform test -test-directory=tests/local
+
+  test-remote:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: az login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: terraform test remote
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        run: |
+          terraform init -test-directory=tests/remote
+          terraform test -test-directory=tests/remote
