@@ -8,10 +8,6 @@ on:
       ARM_TENANT_ID:
 
 jobs:
-  pull-request:
-    if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/module-ci-pull-request.yaml
-
   validate:
     uses: ./.github/workflows/module-ci-validate.yaml
 
@@ -30,6 +26,10 @@ jobs:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+  pull-request:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/module-ci-pull-request.yaml
 
   release:
     if: github.event_name == 'push' && github.ref_name == 'main'
