@@ -32,6 +32,11 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
   release:
-    if: github.ref_name == 'main'
+    if: github.event_name == 'push' && github.ref_name == 'main'
     needs: [validate, lint, documentation, code-analysis, test]
     uses: ./.github/workflows/module-ci-release.yaml
+
+  issue:
+    if: github.event_name == 'schedule' && failure()
+    needs: [validate, lint, documentation, code-analysis, test]
+    uses: ./.github/workflows/module-ci-issue.yaml
