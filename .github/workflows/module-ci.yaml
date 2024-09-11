@@ -1,5 +1,12 @@
 name: module-ci
-on: workflow_call
+
+on:
+  workflow_call:
+    secrets:
+      ARM_CLIENT_ID:
+      ARM_SUBSCRIPTION_ID:
+      ARM_TENANT_ID:
+
 jobs:
   pull-request:
     if: github.event_name == 'pull_request'
@@ -17,7 +24,14 @@ jobs:
   code-analysis:
     uses: ./.github/workflows/module-ci-code-analysis.yaml
 
+  test:
+    uses: ./.github/workflows/module-ci-test.yaml
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
   release:
     if: github.ref_name == 'main'
-    needs: [validate, lint, documentation, code-analysis]
+    needs: [validate, lint, documentation, code-analysis, test]
     uses: ./.github/workflows/module-ci-release.yaml
