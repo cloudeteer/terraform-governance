@@ -15,7 +15,9 @@ jobs:
           path: .terraform-governance
           repository: cloudeteer/terraform-governance
           sparse-checkout-cone-mode: false
-          sparse-checkout: tflint.hcl
+          sparse-checkout: |
+            tflint.hcl
+            tflint.examples.hcl
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -30,4 +32,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run TFLint
-        run: tflint --format=compact --config=.terraform-governance/tflint.hcl
+        run: |
+          tflint --recursive --chdir=examples --config=$(pwd)/.terraform-governance/tflint.examples.hcl --format=compact
+          tflint --config=$(pwd)/.terraform-governance/tflint.hcl --format=compact
