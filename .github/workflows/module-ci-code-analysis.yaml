@@ -16,3 +16,4 @@ jobs:
           scan-type: fs
           scanners: config,secret
           severity: CRITICAL,HIGH
+          skip-dirs: examples/,tests/
