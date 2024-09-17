@@ -25,6 +25,27 @@ jobs:
       - name: Show version
         run: tflint --version
 
+      - name: Compare TFLint configuration files
+        continue-on-error: true
+        run: |
+          diff -u .terraform-governance/tflint.hcl .tflint.hcl
+          result=$?
+
+          if [ $result -eq 1 ]; then
+            echo "::warning::Your local .tflint.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
+          elif [ $result -ge 1 ]; then
+            exit $result
+          fi
+
+          diff -u .terraform-governance/tflint.examples.hcl .tflint.examples.hcl
+          result=$?
+
+          if [ $result -eq 1 ]; then
+            echo "::warning::Your local .tflint.examples.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
+          elif [ $result -ge 1 ]; then
+            exit $result
+          fi
+
       - name: Init TFLint
         run: tflint --init --config=.terraform-governance/tflint.hcl
         env:
