@@ -9,6 +9,7 @@ We adhere to the [Terraform Official Style Guide](https://developer.hashicorp.co
 - [Table of Contents](#table-of-contents)
 - [General Formatting](#general-formatting)
 - [Resources and Data Sources](#resources-and-data-sources)
+  - [Conditionals](#conditionals)
   - [Conditional dynamic blocks](#conditional-dynamic-blocks)
 - [Variables](#variables)
 - [Outputs](#outputs)
@@ -43,6 +44,34 @@ We adhere to the [Terraform Official Style Guide](https://developer.hashicorp.co
 - Always use singular nouns for names.
 - Include `tags` (if applicable) as the last argument, followed by `depends_on` and `lifecycle`. Separate these with an empty line.
 - If [`ignore_changes`](https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#ignore_changes) is used, each ignored attribute must be preceded by a comment explaining why it is being ignored by default.
+
+### Conditionals
+
+Simple conditionals may be written into a single line.
+
+```hcl
+locals {
+  environment_tag = var.environment == "prod" ? "production" : "development"
+}
+```
+
+Use `()` to break up complex conditionals across multiple lines.
+
+```hcl
+# ❌ BAD
+locals {
+  environment_tag = local.environment == "prod" ? "production" : local.environment == "staging" ? "staging" :"development"
+}
+
+# ✅ GOOD
+locals {
+  environment_tag = (
+    local.environment == "prod"
+    ? "production"
+    : local.environment == "staging" ? "staging" : "development"
+  )
+}
+```
 
 ### Conditional dynamic blocks
 
