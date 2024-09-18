@@ -9,6 +9,7 @@ We adhere to the [Terraform Official Style Guide](https://developer.hashicorp.co
 - [Table of Contents](#table-of-contents)
 - [General Formatting](#general-formatting)
 - [Resources and Data Sources](#resources-and-data-sources)
+  - [Conditional dynamic blocks](#conditional-dynamic-blocks)
 - [Variables](#variables)
 - [Outputs](#outputs)
 - [Module Structure](#module-structure)
@@ -42,6 +43,23 @@ We adhere to the [Terraform Official Style Guide](https://developer.hashicorp.co
 - Always use singular nouns for names.
 - Include `tags` (if applicable) as the last argument, followed by `depends_on` and `lifecycle`. Separate these with an empty line.
 - If [`ignore_changes`](https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#ignore_changes) is used, each ignored attribute must be preceded by a comment explaining why it is being ignored by default.
+
+### Conditional dynamic blocks
+
+When using a dynamic block to create conditional blocks, use a list with a single `true` element for the true case and an empty list for the false case.
+
+```hcl
+# ❌ BAD
+dynamic {
+  for_each = var.test ? [null] : []
+  # this block does the same but reading null is unclear
+}
+
+# ✅ GOOD
+dynamic {
+  for_each = var.test ? [true] : []
+}
+```
 
 ## Variables
 
