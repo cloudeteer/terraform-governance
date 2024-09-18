@@ -41,6 +41,7 @@ We adhere to the [Terraform Official Style Guide](https://developer.hashicorp.co
 - Use descriptive names. If there’s only one resource, use `this`. For example, in an Azure Virtual Network, use `azurerm_virtual_network.this` and descriptive names like `private`, `public`, or `database` for multiple instances of `azurerm_subnet`.
 - Always use singular nouns for names.
 - Include `tags` (if applicable) as the last argument, followed by `depends_on` and `lifecycle`. Separate these with an empty line.
+- If [`ignore_changes`](https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#ignore_changes) is used, each ignored attribute must be preceded by a comment explaining why it is being ignored by default.
 
 ## Variables
 
