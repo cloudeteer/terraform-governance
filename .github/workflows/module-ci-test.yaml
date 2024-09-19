@@ -34,6 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+    concurrency:
+      group: module-ci-test-remote
     steps:
       - name: Checkout
         uses: actions/checkout@v4
