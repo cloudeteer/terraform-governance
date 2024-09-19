@@ -11,6 +11,9 @@ jobs:
   test-examples:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: terraform test examples
         run: |
           terraform init -test-directory=tests/examples
@@ -19,6 +22,9 @@ jobs:
   test-local:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: terraform test local
         run: |
           terraform init -test-directory=tests/local
@@ -29,6 +35,9 @@ jobs:
     permissions:
       id-token: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: az login
         uses: azure/login@v2
         with:
