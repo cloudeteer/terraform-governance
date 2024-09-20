@@ -5,9 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: hashicorp/terraform:1.9
-    concurrency:
-      group: ${{ github.workflow }}/${{ github.job }}/${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
         name: Checkout source code

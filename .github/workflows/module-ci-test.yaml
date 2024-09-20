@@ -10,9 +10,6 @@ on:
 jobs:
   test-examples:
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}/${{ github.job }}/${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,9 +21,6 @@ jobs:
 
   test-local:
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}/${{ github.job }}/${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,9 +34,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-    concurrency:
-      group: ${{ github.workflow }}/${{ github.job }}/${{ github.ref }}
-      cancel-in-progress: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
