@@ -5,6 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+    concurrency:
+      group: ${{ github.workflow }}/${{ github.job }}/${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Create GitHub Issue
         uses: actions/github-script@v7

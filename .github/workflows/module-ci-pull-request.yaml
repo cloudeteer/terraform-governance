@@ -6,6 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
+    concurrency:
+      group: ${{ github.workflow }}/${{ github.job }}/${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: mheap/github-action-required-labels@v5
         with:
