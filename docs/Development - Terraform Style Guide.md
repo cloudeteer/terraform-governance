@@ -250,4 +250,10 @@ When [mocking](https://developer.hashicorp.com/terraform/language/tests/mocking)
 
 ### Remote Tests
 
-Tests in `./tests/remote/` execute real deployments using actual providers—no mock providers are allowed. Sensitive information (e.g., `subscription_id` for Azure) must be passed via environment variables and must not be hardcoded into the module tests.
+#### Real Deployments
+
+Tests in `./tests/remote/` execute real deployments using actual providers — no mock providers are allowed. Sensitive information (e.g., `subscription_id` for Azure) must be passed via environment variables and must not be hardcoded into the module tests.
+
+#### Terraform and Provider Versions
+
+The remote tests must validate the minimum version constraints defined in the module's `terraform.hcl`. For example, if the `required_version` in the module's `terraform.tf` is set to `<= 1.9`, the remote test should verify compatibility with version `=1.9.0` to ensure that the defined minimum version works as expected. This approach should also be applied to the required_providers version constraints.
