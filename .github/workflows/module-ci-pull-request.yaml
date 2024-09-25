@@ -12,3 +12,11 @@ jobs:
           mode: exactly
           count: 1
           labels: "breaking-change,feature,fix,other,ignore-release"
+
+      - name: Test if GitHub Actions ref is main
+        run: |
+          echo workflow_ref=${{ github.workflow_ref }}
+          echo repository="${{ github.repository }}/"
+          echo repo_ref="@${{ github.ref }}"
+          echo workflow_path=${workflow_ref#"$repository"}
+          echo workflow_path=${workflow_path%"$repo_ref"}
