@@ -1,10 +1,10 @@
 # Terraform Style Guide
 
-This guide provides the standards and best practices for developing Terraform modules at CLOUDETEER. It is designed to ensure clarity, readability, and consistency across all Terraform projects. These are recommendations to be followed as much as possible.
+This guide provides the standards and best practices for developing Terraform modules at CLOUDETEER. It is designed to ensure clarity, readability, and consistency across all Terraform projects. It's advised to follow these recommendations as closely as practicable.
 
 ## Starting point
 
-We adhere to the [Terraform Official Style Guide](https://developer.hashicorp.com/terraform/language/style) and augment it with the following conventions.
+We adhere to the [Terraform Official Style Guide](https://developer.hashicorp.com/terraform/language/style) while also incorporating the following additional conventions.
 
 Use `terraform fmt` to enforce consistent formatting.
 
