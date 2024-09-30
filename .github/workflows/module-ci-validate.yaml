@@ -9,7 +9,7 @@ jobs:
 
       - name: Get terraform version
         id: terraform_version
-        uses: cloudeteer/actions/get-terraform-version@42-use-a-specific-terraform-version-during-githubu-actions
+        uses: cloudeteer/actions/get-terraform-version@main
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
