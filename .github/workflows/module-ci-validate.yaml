@@ -3,11 +3,18 @@ on: workflow_call
 jobs:
   validate:
     runs-on: ubuntu-latest
-    container:
-      image: hashicorp/terraform:1.9
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Get terraform version
+        id: terraform_version
+        uses: cloudeteer/actions/get-terraform-version@main
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.terraform_version.outputs.required_version }}
 
       - name: terraform init
         run: terraform init -backend=false

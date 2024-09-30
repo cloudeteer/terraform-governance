@@ -3,13 +3,20 @@ on: workflow_call
 jobs:
   lint:
     runs-on: ubuntu-latest
-    container:
-      image: hashicorp/terraform:1.9
     steps:
       - uses: actions/checkout@v4
         name: Checkout source code
 
-      - name: Checkout terraform-docs.yaml
+      - name: Get terraform version
+        id: terraform_version
+        uses: cloudeteer/actions/get-terraform-version@main
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.terraform_version.outputs.required_version }}
+
+      - name: Checkout tflint.hcl
         uses: actions/checkout@v4
         with:
           path: .terraform-governance
@@ -18,6 +25,7 @@ jobs:
           sparse-checkout: |
             tflint.hcl
             tflint.examples.hcl
+            tflint.tests.hcl
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4

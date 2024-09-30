@@ -39,6 +39,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get terraform version
+        id: terraform_version
+        uses: cloudeteer/actions/get-terraform-version@main
+        with:
+          directory: tests/remote
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.terraform_version.outputs.required_version }}
+
       - name: az login
         uses: azure/login@v2
         with:
