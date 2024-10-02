@@ -41,6 +41,7 @@ resource "github_repository" "repository" {
   has_projects                = false
   has_wiki                    = false
   has_downloads               = false
+  allow_auto_merge            = true
   allow_merge_commit          = false
   allow_rebase_merge          = false
   allow_squash_merge          = true
