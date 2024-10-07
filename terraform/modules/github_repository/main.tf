@@ -3,6 +3,13 @@ variable "repository_name" {
   type        = string
 }
 
+variable "actions_secrets" {
+  description = "GitHub Actions evnrionment secrets to create."
+  type        = map(string)
+  default     = {}
+  sensitive   = true
+}
+
 terraform {
   required_providers {
     github = {
@@ -91,6 +98,16 @@ resource "github_repository_collaborators" "admins" {
     permission = "admin"
     username   = "neonwhiskers"
   }
+}
+
+# https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_environment_secret
+resource "github_actions_secret" "this" {
+  for_each = nonsensitive(var.actions_secrets)
+
+  secret_name     = each.key
+  plaintext_value = sensitive(each.value)
+
+  repository = github_repository.repository.name
 }
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch

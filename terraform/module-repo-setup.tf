@@ -44,4 +44,9 @@ module "github_repository" {
     [var.create_repo])
   ))
   repository_name = each.value
+  actions_secrets = {
+    ARM_CLIENT_ID: var.ARM_CLIENT_ID
+    ARM_SUBSCRIPTION_ID: var.ARM_SUBSCRIPTION_ID
+    ARM_TENANT_ID: var.ARM_TENANT_ID
+  }
 }
