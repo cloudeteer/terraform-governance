@@ -54,8 +54,8 @@ These are just some examples of critical elements to review from the style guide
 
 - Ensure no unnecessary or obsolete files are included (e.g., `CHANGELOG.md`).
 - Check Terraform file structure:
-  - Validate that `data.tf` and `main.tf` are used, or alternatively, `d-*.tf` and `r-*.tf`.
-  - Review HCL labels for clarity and descriptiveness.
+  - Validate that `main.tf` is used, or alternatively, `d-*.tf` and `r-*.tf`.
+  - Review [HCL labels](https://developer.hashicorp.com/terraform/language#about-the-terraform-language) (Name of Azure Resource) for clarity and descriptiveness.
   - Confirm output descriptions in `output.tf` are present and use meaningful names—avoid abbreviations.
   - Ensure Azure locations use API values, not friendly names (in both code and tests).
 
