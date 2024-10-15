@@ -31,6 +31,7 @@ jobs:
           terraform test -test-directory=tests/local
 
   test-remote:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: read
