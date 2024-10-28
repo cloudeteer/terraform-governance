@@ -14,7 +14,8 @@ import {
   to = module.github_repository["terraform-azurerm-mssql-vm"].github_repository.repository
 }
 
-import {
-  id = "terraform-azurerm-avd"
-  to = module.github_repository["terraform-azurerm-avd"].github_repository.repository
-}
+# fresh import of terraform-azurerm-avd
+#import {
+#  id = "terraform-azurerm-avd"
+#  to = module.github_repository["terraform-azurerm-avd"].github_repository.repository
+#}
