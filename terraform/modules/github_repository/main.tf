@@ -82,6 +82,12 @@ resource "github_repository_collaborators" "admins" {
     permission = "admin"
     team_id    = "chapter-operations-engineering" # id: 5433329
   }
+  # Do not delete "cloudeteerbot" as admin even it is part of "service-accounts",
+  # because there is a race-condition in the deployment situation.
+  user {
+    permission = "admin"
+    username   = "cloudeteerbot"
+  }
 }
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_environment_secret
