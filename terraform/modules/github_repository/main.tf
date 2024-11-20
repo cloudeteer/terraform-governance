@@ -78,25 +78,9 @@ resource "github_repository_collaborators" "admins" {
     permission = "admin"
     team_id    = "service-accounts" # id: 6206668
   }
-  user {
+  team {
     permission = "admin"
-    username   = "cloudeteerbot"
-  }
-  user {
-    permission = "admin"
-    username   = "lixhunter"
-  }
-  user {
-    permission = "admin"
-    username   = "rswrz"
-  }
-  user {
-    permission = "admin"
-    username   = "Phil-Thoennissen"
-  }
-  user {
-    permission = "admin"
-    username   = "neonwhiskers"
+    team_id    = "chapter-operations-engineering" # id: 5433329
   }
 }
 
