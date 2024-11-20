@@ -5,8 +5,8 @@ variable "repository_name" {
 
 variable "actions_secrets" {
   description = "GitHub Actions evnrionment secrets to create."
-  type        = map(string)
-  default     = {}
+  type = map(string)
+  default = {}
   sensitive   = true
 }
 
@@ -25,11 +25,11 @@ data "github_repository" "existing_repo" {
 }
 
 locals {
-  provider = split("-", var.repository_name)[2]
+  provider           = split("-", var.repository_name)[2]
   provider_formatted = (local.provider == "azurerm" ? "AzureRM" :
-  (local.provider == "aws" ? "AWS" : local.provider))
+    (local.provider == "aws" ? "AWS" : local.provider))
   module_name = join("-", slice(split("-", var.repository_name), 2, length(split("-", var.repository_name))))
-  visibility  = coalesce(data.github_repository.existing_repo[0].visibility, "public")
+  visibility = coalesce(data.github_repository.existing_repo[0].visibility, "public")
   description = coalesce(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module")
   combined_topics = concat(
     coalesce(data.github_repository.existing_repo[0].topics, []),
@@ -78,25 +78,9 @@ resource "github_repository_collaborators" "admins" {
     permission = "admin"
     team_id    = "service-accounts" # id: 6206668
   }
-  user {
+  team {
     permission = "admin"
-    username   = "cloudeteerbot"
-  }
-  user {
-    permission = "admin"
-    username   = "lixhunter"
-  }
-  user {
-    permission = "admin"
-    username   = "rswrz"
-  }
-  user {
-    permission = "admin"
-    username   = "Phil-Thoennissen"
-  }
-  user {
-    permission = "admin"
-    username   = "neonwhiskers"
+    team_id    = "chapter-operations-engineering" # id: 5433329
   }
 }
 
@@ -104,7 +88,7 @@ resource "github_repository_collaborators" "admins" {
 resource "github_actions_secret" "this" {
   for_each = nonsensitive(var.actions_secrets)
 
-  secret_name     = each.key
+  secret_name = each.key
   plaintext_value = sensitive(each.value)
 
   repository = github_repository.repository.name
