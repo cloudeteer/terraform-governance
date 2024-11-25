@@ -41,7 +41,17 @@ OpenTofu planned the following actions, but then encountered a problem:
 ╵
 ```
 
-## Solution
+## Solution 1 - state untaint
+
+The Repository is already created in Github and the Terraform state is not in sync with the actual state of the repository.
+
+This may occur if terraform apply was interrupted or failed while creating the repository.
+
+```bash
+tofu untaint "module.github_repository[\"terraform-azurerm-avd\"].github_repository.repository"
+```
+
+## Solution 2 - remove and re-add
 
 <!--
 Provide steps that the user can take to solve the problem. For example "The
@@ -62,7 +72,7 @@ To resolve this issue first cleanup the tainted resource, by
    1. remove topic "auto-terraform-governance" from repository
 2. adhoc modify current terraform state
    ```bash
-   tofu state remove "module.github_repository[\"terraform-azurerm-avd\"]" -dry-run
+   tofu state remove -dry-run "module.github_repository[\"terraform-azurerm-avd\"]"
    ```
    > [!NOTE]
    > always use `-dry-run` first to verify the changes, then remove the flag to apply the changes
@@ -71,7 +81,7 @@ To resolve this issue first cleanup the tainted resource, by
 ---
 After that you can re-add the repository to the configuration by following the Solution steps in the [Troubleshoot - Terraform module-repo-setup could not clone][related-troubleshoot].
 
-### Solution Note
+### Solution 2 - Note
 
 In Terraform this can be solved in removed blocks, but the [lifecycle block is not supported by OpenTofu][open-tofu-removed-block].
 

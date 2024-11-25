@@ -1,29 +1,3 @@
-variable "repository_name" {
-  description = "Name of the repository"
-  type        = string
-}
-
-variable "actions_secrets" {
-  description = "GitHub Actions evnrionment secrets to create."
-  type        = map(string)
-  default     = {}
-  sensitive   = true
-}
-
-terraform {
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
-  }
-}
-
-data "github_repository" "existing_repo" {
-  count     = 1
-  full_name = "cloudeteer/${var.repository_name}"
-}
-
 locals {
   provider = split("-", var.repository_name)[2]
   provider_formatted = (local.provider == "azurerm" ? "AzureRM" :
@@ -35,7 +9,13 @@ locals {
     coalesce(data.github_repository.existing_repo[0].topics, []),
     ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
   )
-  homepage_url = coalesce(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
+  homepage_url                    = coalesce(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
+  is_template                     = data.github_repository.existing_repo[0].is_template
+}
+
+data "github_repository" "existing_repo" {
+  count     = 1
+  full_name = "cloudeteer/${var.repository_name}"
 }
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
@@ -52,11 +32,14 @@ resource "github_repository" "repository" {
   allow_merge_commit          = false
   allow_rebase_merge          = false
   allow_squash_merge          = true
+  allow_update_branch         = true
   topics                      = local.combined_topics
   homepage_url                = local.homepage_url
   vulnerability_alerts        = true
+  # may cause "Commit signoff is enforced by the organization and cannot be disabled" https://github.com/integrations/terraform-provider-github/issues/2077
   web_commit_signoff_required = true
   delete_branch_on_merge      = true
+  is_template                 = local.is_template
   # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository#template-repositories
   template {
     owner      = "cloudeteer"
@@ -76,11 +59,11 @@ resource "github_repository_collaborators" "admins" {
   # get id: $ gh api /orgs/cloudeteer/teams/service-accounts | jq '.id'
   team {
     permission = "admin"
-    team_id    = "service-accounts" # id: 6206668
+    team_id    = "6206668" # team-slug: service-accounts
   }
   team {
     permission = "admin"
-    team_id    = "chapter-operations-engineering" # id: 5433329
+    team_id    = "5433329" # team-slug: chapter-operations-engineering
   }
   # Do not delete "cloudeteerbot" as admin even it is part of "service-accounts",
   # because there is a race-condition in the deployment situation.
@@ -118,8 +101,8 @@ resource "github_branch_protection" "ruleset_branch_default_protect" {
   //target      = "branch"
   repository_id                   = github_repository.repository.name
   pattern                         = "main"
-  required_linear_history         = true
   require_conversation_resolution = true
+  required_linear_history         = true
   required_status_checks {
     strict = true
   }
