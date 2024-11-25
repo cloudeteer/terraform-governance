@@ -1,0 +1,9 @@
+name: module-manage-github
+
+on:
+  workflow_call:
+
+jobs:
+  project:
+    uses: ./.github/workflows/module-github-project.yaml
+    secrets: inherit
