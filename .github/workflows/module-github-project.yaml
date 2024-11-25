@@ -1,0 +1,16 @@
+name: module-github-project
+
+on:
+  workflow_call:
+
+jobs:
+  project:
+    runs-on: ubuntu-latest
+    steps:
+      # TODO: switch to main
+      #- uses: cloudeteer/actions/manage-github-project@main
+      - uses: cloudeteer/actions/manage-github-project@add-manage-github-project
+        with:
+          project-url: https://github.com/orgs/cloudeteer/projects/107
+          app-id: ${{ vars.ORGA_GITHUB_APP_ID_CDTGITHUBPROJECTMANAGEMENT }}
+          private-key: ${{ secrets.ORGA_GITHUB_APP_SECRET_CDTGITHUBPROJECTMANAGEMENT }}
