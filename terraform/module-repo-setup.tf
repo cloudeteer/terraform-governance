@@ -1,10 +1,4 @@
 terraform {
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
-  }
   backend "azurerm" {
     subscription_id      = "a78e11bf-66d8-4aae-b171-cc43ced4e6ca"
     resource_group_name  = "rg-terraform-governance"
@@ -15,9 +9,10 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
-  skip_provider_registration = true
-  partner_id                 = "1782f57c-edb6-4bf8-bd26-c7e0ef75c1e8"
+  features {
+    provider_registration = false
+  }
+  partner_id = "1782f57c-edb6-4bf8-bd26-c7e0ef75c1e8"
 }
 
 provider "github" {
@@ -45,8 +40,8 @@ module "github_repository" {
   ))
   repository_name = each.value
   actions_secrets = {
-    ARM_CLIENT_ID: var.ARM_CLIENT_ID
-    ARM_SUBSCRIPTION_ID: var.ARM_SUBSCRIPTION_ID
-    ARM_TENANT_ID: var.ARM_TENANT_ID
+    ARM_CLIENT_ID       = var.ARM_CLIENT_ID
+    ARM_SUBSCRIPTION_ID = var.ARM_SUBSCRIPTION_ID
+    ARM_TENANT_ID       = var.ARM_TENANT_ID
   }
 }
