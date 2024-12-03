@@ -1,0 +1,11 @@
+name: 📇 Add Issues and PRs to Project
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  github-project:
+    uses: ./.github/workflows/module-github-project.yaml
