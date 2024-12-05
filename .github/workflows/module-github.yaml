@@ -11,7 +11,7 @@ on:
 
 jobs:
   project:
-    if: run_job_project && (github.event_name == 'pull_request' || github.event_name == 'issues')
+    if: inputs.run_job_project && (github.event_name == 'pull_request' || github.event_name == 'issues')
     uses: ./.github/workflows/module-github-project.yaml
     secrets: inherit
   pull-request:
