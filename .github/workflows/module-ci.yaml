@@ -27,15 +27,6 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
-  pull-request:
-    if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/module-ci-pull-request.yaml
-
-  release:
-    if: github.event_name == 'push' && github.ref_name == 'main'
-    needs: [validate, lint, documentation, code-analysis, test]
-    uses: ./.github/workflows/module-ci-release.yaml
-
   issue:
     if: github.event_name == 'schedule' && failure()
     needs: [validate, lint, documentation, code-analysis, test]

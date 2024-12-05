@@ -5,5 +5,12 @@ on:
 
 jobs:
   project:
+    if: github.event_name == 'pull_request' || github.event_name == 'issues'
     uses: ./.github/workflows/module-github-project.yaml
     secrets: inherit
+  pull-request:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/module-github-pull-request.yaml
+  release:
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    uses: ./.github/workflows/module-github-release.yaml

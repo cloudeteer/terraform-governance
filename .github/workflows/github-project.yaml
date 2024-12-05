@@ -9,3 +9,4 @@ on:
 jobs:
   github-project:
     uses: ./.github/workflows/module-github-project.yaml
+    secrets: inherit
