@@ -2,10 +2,16 @@ name: module-manage-github
 
 on:
   workflow_call:
+    inputs:
+      run_job_project:
+        description: 'run project job'
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   project:
-    if: github.event_name == 'pull_request' || github.event_name == 'issues'
+    if: run_job_project && (github.event_name == 'pull_request' || github.event_name == 'issues')
     uses: ./.github/workflows/module-github-project.yaml
     secrets: inherit
   pull-request:
