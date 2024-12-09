@@ -36,22 +36,28 @@ jobs:
       - name: Compare TFLint configuration files
         continue-on-error: true
         run: |
-          diff -u .terraform-governance/tflint.hcl .tflint.hcl
-          result=$?
-
-          if [ $result -eq 1 ]; then
-            echo "::warning::Your local .tflint.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
-          elif [ $result -ge 1 ]; then
-            exit $result
+          # Compare tflint.hcl
+          if diff -u .terraform-governance/tflint.hcl .tflint.hcl > /dev/null; then
+            echo "No differences found in tflint.hcl"
+          else
+            result=$?
+            if [ $result -eq 1 ]; then
+              echo "::warning::Your local .tflint.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
+            elif [ $result -gt 1 ]; then
+              echo "::error::An error occurred while comparing .tflint.hcl files."
+            fi
           fi
-
-          diff -u .terraform-governance/tflint.examples.hcl .tflint.examples.hcl
-          result=$?
-
-          if [ $result -eq 1 ]; then
-            echo "::warning::Your local .tflint.examples.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
-          elif [ $result -ge 1 ]; then
-            exit $result
+          
+          # Compare tflint.examples.hcl
+          if diff -u .terraform-governance/tflint.examples.hcl .tflint.examples.hcl > /dev/null; then
+            echo "No differences found in tflint.examples.hcl"
+          else
+            result=$?
+            if [ $result -eq 1 ]; then
+              echo "::warning::Your local .tflint.examples.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
+            elif [ $result -gt 1 ]; then
+              echo "::error::An error occurred while comparing .tflint.examples.hcl files."
+            fi
           fi
 
       - name: Init TFLint
