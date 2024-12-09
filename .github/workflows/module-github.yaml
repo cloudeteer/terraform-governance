@@ -5,7 +5,6 @@ on:
     inputs:
       run_job_project:
         description: 'run project job'
-        required: true
         default: true
         type: boolean
 
