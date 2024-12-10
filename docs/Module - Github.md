@@ -1,4 +1,4 @@
-## **Module Manage GitHub**
+## **Module - GitHub**
 **File**: [`.github/workflows/module-github.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-github.yaml)
 
 ### **Purpose**
