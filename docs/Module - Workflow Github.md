@@ -65,7 +65,3 @@ The `module-ci-pull-request` workflow ensures pull requests have exactly one req
 File : [`.github/workflows/module-github-release.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-github-release.yaml)
 
 Automates semantic versioning and GitHub releases based on pull request labels.
-
-### Contributions
-
-We encourage contributions from the community. Whether you're reporting issues, suggesting enhancements, or contributing code, your input is highly valued. Refer to the [Contributing Guidelines](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-github-release.yaml) for details.

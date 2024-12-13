@@ -96,7 +96,3 @@ This workflow runs Terraform tests (examples, local, and remote) to ensure that 
 File : [`.github/workflows/module-ci-issue.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-ci-issue.yaml)
 
 Automatically creates a GitHub issue if a scheduled workflow fails, providing visibility into workflow failures.
-
-### Contributions
-
-We encourage contributions from the community. Whether you're reporting issues, suggesting enhancements, or contributing code, your input is highly valued. Refer to the [Contributing Guidelines](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-github-release.yaml) for details.
