@@ -65,15 +65,11 @@ It requires the following secrets, which are needed for the remote test, which d
 
 File : [`.github/workflows/module-ci-validate.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-ci-validate.yaml)
 
-### Purpose
-
 This workflow validates Terraform configurations to ensure they are syntactically correct, formatted properly, and meet validation standards.
 
 ## Module CI Lint
 
 File : [`.github/workflows/module-ci-lint.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-ci-lint.yaml)
-
-### Purpose
 
 The `module-ci-lint` workflow ensures that Terraform configurations adhere to best practices using TFLint, a linter specifically designed for Terraform.
 
@@ -81,15 +77,11 @@ The `module-ci-lint` workflow ensures that Terraform configurations adhere to be
 
 File : [`.github/workflows/module-ci-documentation.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-ci-documentation.yaml)
 
-### Purpose
-
 This workflow validates the Terraform module documentation using `terraform-docs`. It ensures that documentation is consistent with the module's actual configuration.
 
 ## Module CI Code Analysis
 
 File : [`.github/workflows/module-ci-code-analysis.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-ci-code-analysis.yaml)
-
-### Purpose
 
 workflow scans Terraform configurations for misconfigurations and detects exposed secrets using [Trivy](https://trivy.dev), a powerful security and configuration analysis tool.
 
@@ -97,15 +89,11 @@ workflow scans Terraform configurations for misconfigurations and detects expose
 
 File : [`.github/workflows/module-ci-test.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-ci-test.yaml)
 
-### Purpose
-
 This workflow runs Terraform tests (examples, local, and remote) to ensure that module configurations function as intended.
 
 ## Module CI Issue
 
 File : [`.github/workflows/module-ci-issue.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-ci-issue.yaml)
-
-### Purpose
 
 Automatically creates a GitHub issue if a scheduled workflow fails, providing visibility into workflow failures.
 

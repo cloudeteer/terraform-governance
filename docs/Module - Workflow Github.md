@@ -54,23 +54,17 @@ Default: `true`
 
 File : [`.github/workflows/module-github-project.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-github-project.yaml)
 
-### Purpose
-
 This workflow automates the management of GitHub projects by interacting with a specific project URL.
 
 ## Module GitHub Pull Request
 
 File : [`.github/workflows/module-github-pull-request.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-github-pull-request.yaml)
 
-### Purpose
-
 The `module-ci-pull-request` workflow ensures pull requests have exactly one required label, enforcing labeling best practices.
 
 ## Module GitHub Release
 
 File : [`.github/workflows/module-github-release.yaml`](https://github.com/cloudeteer/terraform-governance/blob/main/.github/workflows/module-github-release.yaml)
-
-### Purpose
 
 Automates semantic versioning and GitHub releases based on pull request labels.
 
