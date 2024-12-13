@@ -30,7 +30,7 @@ jobs:
     secrets: inherit
 ```
 
-### Purpose
+## Purpose
 
 The `module-manage-github` workflow serves as an entry point for GitHub management tasks. It calls modular workflows for managing GitHub projects, handling pull requests, and automating releases.
 
@@ -38,11 +38,11 @@ This workflow enforces standardized practices across project management, pull re
 
 See the following sections for detailed information on each modular workflow.
 
-### Triggers
+## Triggers
 
 This workflow is triggered using `workflow_call`, allowing other workflows to invoke it with specific inputs.
 
-### Inputs
+## Inputs
 
 - `run_job_project` :
 
