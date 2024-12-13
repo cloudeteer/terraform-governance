@@ -44,11 +44,9 @@ This workflow is triggered using `workflow_call`, allowing other workflows to in
 
 ## Inputs
 
-- `run_job_project` :
-
-Description: Determines whether to run the project management job  
-Type: `boolean`  
-Default: `true`
+Name | Description | Type | Default
+-- | -- | -- | --
+`run_job_project` | Determines whether to run the project management job | `boolean` | `false`
 
 ## Module GitHub Project
 
