@@ -4,7 +4,7 @@ jobs:
   documentation:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/terraform-docs/terraform-docs:0.16.0
+      image: quay.io/terraform-docs/terraform-docs:0.19.0
     steps:
       - name: Install prerequisites
         run: apk add git
