@@ -17,5 +17,9 @@ jobs:
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/module-github-pull-request.yaml
   release:
-    if: github.event_name == 'push' && github.ref_name == 'main'
+    # If the push event triggering this workflow is the first commit on a branch,
+    # `github.event.before` will always be "0000000000000000000000000000000000000000".
+    # With this knowledge, we can skip the release process on the initial commit,
+    # which is handled by CI during repository bootstrapping.
+    if: github.event_name == 'push' && github.ref_name == 'main' && github.event.before != '0000000000000000000000000000000000000000'
     uses: ./.github/workflows/module-github-release.yaml
