@@ -1,7 +1,7 @@
 name: module-ci-issue
 on: workflow_call
 jobs:
-  validate:
+  issue:
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -11,7 +11,7 @@ jobs:
         with:
           script: |
             const runLink = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const issueTitle = `Scheduled workflow \`${context.github.workflow}\` failed``;
+            const issueTitle = `Scheduled workflow \`${context.github.workflow}\` failed`;
             const issueBody = `See [Action run](${runLink}) for details.`;
             const response = await github.rest.issues.create({
               owner: context.repo.owner,
