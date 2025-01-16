@@ -5,6 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -12,6 +13,8 @@ jobs:
           fetch-depth: 0
 
       - name: Calculate new SemVer tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         id: tag
         run: | #shell
           git fetch --force --tags
@@ -35,7 +38,7 @@ jobs:
               echo 'Found "feature" label, will do minor release if no breaking change in further labels found.'
               new_tag=$(echo "${prev_tag#v}" | awk -F. '{print "v"$1"."$2+1".0"}')
             fi
-          done < <(git log --pretty=format:%s "$prev_tag"..@ | grep -o -E '#\d+')
+          done < <(git log --pretty=format:%s "$prev_tag"..@ | grep -o -P '#\d+')
 
           if [ -z "$new_tag" ]; then
             echo 'No special labels found, will do patch release'
