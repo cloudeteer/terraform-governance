@@ -12,6 +12,8 @@ jobs:
           fetch-depth: 0
 
       - name: Calculate new SemVer tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         id: tag
         run: | #shell
           git fetch --force --tags
