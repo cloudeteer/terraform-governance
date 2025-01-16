@@ -43,6 +43,10 @@ Alternatively, you can run the workflow through the GitHub web interface:
 
 </details>
 
+> [!IMPORTANT]
+> Currently, the GitHub API does not support configuring the "**Approval for running fork pull request workflows from contributors**" permission to "**Require approval for all external contributors**" in the repository action settings. As a result, this setting must be manually configured via the GitHub Web UI under **Repository Settings** > **Actions** > **General**.
+> ![GitHub Repository Settings: Actions Permissions](assets/github-repository-actions-permissions-01.png)
+
 ### 1.2 Install DCO Application
 
 To ensure compliance with our contribution guidelines, install and configure the DCO (Developer Certificate of Origin) GitHub application. This step requires GitHub Org Admin permissions.
