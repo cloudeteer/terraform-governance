@@ -1,7 +1,7 @@
 name: module-ci-issue
 on: workflow_call
 jobs:
-  validate:
+  issue:
     runs-on: ubuntu-latest
     permissions:
       issues: write
