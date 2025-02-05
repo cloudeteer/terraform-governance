@@ -53,7 +53,10 @@ jobs:
           terraform test -test-directory=tests/local
 
   test-remote:
-    if: github.event.pull_request.draft == false
+    # This workflow is configured to run remote tests only on pull requests.
+    # The Azure Managed Identity Federation configuration restricts authentication to the 'pull_request' event type.
+    # Additionally, remote tests are skipped for draft pull requests.
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: read
