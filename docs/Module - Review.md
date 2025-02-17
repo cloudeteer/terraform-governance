@@ -23,15 +23,24 @@ Verify if the semantic versioning label corresponds to the actual code changes. 
 
 Ask yourself: Does this PR implement a `fix`, `feature`, or `breaking` change?
 
-| Label      | Description                                                                   | Semantic Version Update |
-| ---------- | ----------------------------------------------------------------------------- | ----------------------- |
-| `fix`      | **PATCH**: for backward-compatible bug fixes.                                  | `v1.2.3` → `v1.2.4`     |
-| `feature`  | **MINOR**: for adding backward-compatible functionality.                      | `v1.2.3` → `v1.3.0`     |
-| `breaking` | **MAJOR**: for incompatible API changes.                                      | `v1.2.3` → `v2.0.0`     |
+| Label      | Description                                              | Semantic Version Update |
+|------------|----------------------------------------------------------|-------------------------|
+| `fix`      | **PATCH**: for backward-compatible bug fixes.            | `v1.2.3` → `v1.2.4`     |
+| `feature`  | **MINOR**: for adding backward-compatible functionality. | `v1.2.3` → `v1.3.0`     |
+| `breaking` | **MAJOR**: for incompatible API changes.                 | `v1.2.3` → `v2.0.0`     |
 
 ### GitHub Checks
 
 Ensure all GitHub checks are passing (green). Also, verify if the latest module-ci workflow is being used.
+
+### Manual Test
+
+If the module is new to the reviewer, then the reviewer should test the module manually. This includes:
+
+- Set up the module on the Playground.
+- Verify the module works as expected. (e.g., create, update, and delete resources).
+
+This manual test is essential to understand the module's functionality.
 
 ### Configuration files
 
