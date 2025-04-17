@@ -47,7 +47,7 @@ jobs:
               echo "::error::An error occurred while comparing .tflint.hcl files."
             fi
           fi
-          
+
           # Compare tflint.examples.hcl
           if diff -u .terraform-governance/tflint.examples.hcl .tflint.examples.hcl > /dev/null; then
             echo "No differences found in tflint.examples.hcl"
@@ -57,6 +57,18 @@ jobs:
               echo "::warning::Your local .tflint.examples.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
             elif [ $result -gt 1 ]; then
               echo "::error::An error occurred while comparing .tflint.examples.hcl files."
+            fi
+          fi
+
+          # Compare tflint.tests.hcl
+          if diff -u .terraform-governance/tflint.tests.hcl .tflint.tests.hcl > /dev/null; then
+            echo "No differences found in tflint.tests.hcl"
+          else
+            result=$?
+            if [ $result -eq 1 ]; then
+              echo "::warning::Your local .tflint.tests.hcl file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
+            elif [ $result -gt 1 ]; then
+              echo "::error::An error occurred while comparing .tflint.tests.hcl files."
             fi
           fi
 
