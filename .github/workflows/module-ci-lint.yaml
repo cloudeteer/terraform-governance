@@ -16,7 +16,7 @@ jobs:
         with:
           terraform_version: ${{ steps.terraform_version.outputs.required_version }}
 
-      - name: Checkout tflint.hcl
+      - name: Checkout TFLint config files from terraform-governance repository
         uses: actions/checkout@v4
         with:
           path: .terraform-governance
