@@ -23,9 +23,9 @@ jobs:
           repository: cloudeteer/terraform-governance
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            tflint.hcl
-            tflint.examples.hcl
-            tflint.tests.hcl
+            config/tflint.hcl
+            config/tflint.examples.hcl
+            config/tflint.tests.hcl
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -36,8 +36,11 @@ jobs:
       - name: Compare TFLint configuration files
         continue-on-error: true
         run: |
+          ls -al ./
+          ls -al .terraform-governance/
+
           # Compare tflint.hcl
-          if diff -u .terraform-governance/tflint.hcl .tflint.hcl > /dev/null; then
+          if diff -u .terraform-governance/config/tflint.hcl .tflint.hcl > /dev/null; then
             echo "No differences found in tflint.hcl"
           else
             result=$?
@@ -49,7 +52,7 @@ jobs:
           fi
 
           # Compare tflint.examples.hcl
-          if diff -u .terraform-governance/tflint.examples.hcl .tflint.examples.hcl > /dev/null; then
+          if diff -u .terraform-governance/config/tflint.examples.hcl .tflint.examples.hcl > /dev/null; then
             echo "No differences found in tflint.examples.hcl"
           else
             result=$?
@@ -60,8 +63,8 @@ jobs:
             fi
           fi
 
-          # Compare tflint.tests.hcl
-          if diff -u .terraform-governance/tflint.tests.hcl .tflint.tests.hcl > /dev/null; then
+          # Compare tflint.examples.hcl
+          if diff -u .terraform-governance/config/tflint.tests.hcl .tflint.tests.hcl > /dev/null; then
             echo "No differences found in tflint.tests.hcl"
           else
             result=$?
@@ -73,12 +76,12 @@ jobs:
           fi
 
       - name: Init TFLint
-        run: tflint --init --config=.terraform-governance/tflint.hcl
+        run: tflint --init --config=.terraform-governance/config/tflint.hcl
         env:
           # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run TFLint
         run: |
-          tflint --recursive --chdir=examples --config=$(pwd)/.terraform-governance/tflint.examples.hcl --format=compact
-          tflint --config=$(pwd)/.terraform-governance/tflint.hcl --format=compact
+          tflint --recursive --chdir=examples --config=$(pwd)/.terraform-governance/config/tflint.examples.hcl --format=compact
+          tflint --config=$(pwd)/.terraform-governance/config/tflint.hcl --format=compact

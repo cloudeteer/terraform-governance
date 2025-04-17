@@ -18,12 +18,12 @@ jobs:
           path: .terraform-governance
           repository: cloudeteer/terraform-governance
           sparse-checkout-cone-mode: false
-          sparse-checkout: terraform-docs.yaml
+          sparse-checkout: config/terraform-docs.yaml
 
       - name: Compare terraform-docs configuration files
         continue-on-error: true
         run: |
-          diff -u .terraform-governance/terraform-docs.yaml .terraform-docs.yaml
+          diff -u .terraform-governance/config/terraform-docs.yaml .terraform-docs.yaml
           result=$?
 
           if [ $result -eq 1 ]; then
@@ -33,4 +33,4 @@ jobs:
           fi
 
       - name: Check for diff in terraform-docs
-        run: terraform-docs . --config .terraform-governance/terraform-docs.yaml --output-check
+        run: terraform-docs . --config .terraform-governance/config/terraform-docs.yaml --output-check
