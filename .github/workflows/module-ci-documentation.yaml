@@ -18,19 +18,21 @@ jobs:
           path: .terraform-governance
           repository: cloudeteer/terraform-governance
           sparse-checkout-cone-mode: false
-          sparse-checkout: terraform-docs.yaml
+          sparse-checkout: config/terraform-docs.yaml
 
       - name: Compare terraform-docs configuration files
         continue-on-error: true
         run: |
-          diff -u .terraform-governance/terraform-docs.yaml .terraform-docs.yaml
-          result=$?
-
-          if [ $result -eq 1 ]; then
+          if diff -u .terraform-governance/config/terraform-docs.yaml .terraform-docs.yaml > /dev/null; then
+            echo "No differences found in terraform-docs.yaml"
+          else
+            result=$?
+            if [ $result -eq 1 ]; then
             echo "::warning::Your local .terraform-docs.yaml file is different from the default one in the cloudeteer/terraform-governance repository. Please update your configuration file accordingly to make sure you have consistent documentation results."
-          elif [ $result -ge 1 ]; then
-            exit $result
+            elif [ $result -gt 1 ]; then
+              echo "::error::An error occurred while comparing .terraform-docs.yaml files."
+            fi
           fi
 
       - name: Check for diff in terraform-docs
-        run: terraform-docs . --config .terraform-governance/terraform-docs.yaml --output-check
+        run: terraform-docs . --config .terraform-governance/config/terraform-docs.yaml --output-check
