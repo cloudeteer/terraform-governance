@@ -1,4 +1,4 @@
-name: module-ci-pull-request
+name: module-github-pull-request
 on: workflow_call
 
 jobs:

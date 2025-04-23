@@ -1,4 +1,4 @@
-name: module-ci-release
+name: module-github-release
 on: workflow_call
 jobs:
   release:

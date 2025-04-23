@@ -1,4 +1,4 @@
-name: module-manage-github
+name: module-github
 
 on:
   workflow_call:
