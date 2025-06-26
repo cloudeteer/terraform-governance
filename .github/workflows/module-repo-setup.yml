@@ -56,7 +56,7 @@ jobs:
       exit-code: ${{ steps.plan.outputs.exit-code }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
+      - uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
         with:
           tofu_version: ${{ env.TF_VERSION }}
           tofu_wrapper: false
@@ -95,7 +95,7 @@ jobs:
     needs: [plan]
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
+      - uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
         with:
           tofu_version: ${{ env.TF_VERSION }}
           tofu_wrapper: false
