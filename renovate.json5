@@ -1,0 +1,43 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    "helpers:pinGitHubActionDigestsToSemver"
+  ],
+  dependencyDashboardApproval: true,
+  semanticCommits: "disabled",
+  packageRules: [
+    {
+      // Disable Terraform version updates, since we use OpenTofu
+      matchPackageNames: ["hashicorp/terraform"],
+      enabled: false,
+      automerge: true,
+      prPriority: -1
+    }
+  ],
+  customManagers: [
+    {
+      customType: "regex",
+      managerFilePatterns: [
+        "**/*.yml",
+        "**/*.yaml"
+      ],
+      matchStrings: [
+        // Match comment with depName like github=opentofu/opentofu,
+        // followed by a version string
+        // Simple Example:
+        // # renovate: github=opentofu/opentofu
+        // TF_VERSION: v1.8.4
+        // Full Example:
+        // # renovate: github=opentofu/opentofu versioning=semver
+        // TF_VERSION: v1.8.4@sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+        "\\s*#\\s?renovate: (?<datasource>.*?)=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s+[\\w+\\.\\-]+(?:[:=]|\\s+\\S+)\\s*[\\\"']?(?<currentValue>[\\w+\\.\\-]*)(?:@(?<currentDigest>sha256:[a-f0-9]+))?[\\\"']?",
+      ],
+      datasourceTemplate: "{{#if (equals datasource 'github')}}github-tags{{else}}{{{datasource}}}{{/if}}",
+      versioningTemplate: "{{#if (equals datasource 'docker')}}docker{{else if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+    },
+  ],
+  "pre-commit": {
+    enabled: true
+  }
+}
