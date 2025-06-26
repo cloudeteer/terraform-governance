@@ -12,7 +12,7 @@ jobs:
         uses: cloudeteer/actions/get-terraform-version@main
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: ${{ steps.terraform_version.outputs.required_version }}
 
