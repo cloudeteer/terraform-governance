@@ -4,7 +4,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         name: Checkout source code
 
       - name: Get terraform version
@@ -12,12 +12,12 @@ jobs:
         uses: cloudeteer/actions/get-terraform-version@main
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
           terraform_version: ${{ steps.terraform_version.outputs.required_version }}
 
       - name: Checkout TFLint config files from terraform-governance repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           path: .terraform-governance
           repository: cloudeteer/terraform-governance
@@ -28,7 +28,7 @@ jobs:
             config/tflint.tests.hcl
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@90f302c255ef959cbfb4bd10581afecdb7ece3e6 # v4
 
       - name: Show version
         run: tflint --version
