@@ -55,7 +55,7 @@ jobs:
     outputs:
       exit-code: ${{ steps.plan.outputs.exit-code }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
         with:
           tofu_version: ${{ env.TF_VERSION }}
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [plan]
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
         with:
           tofu_version: ${{ env.TF_VERSION }}
