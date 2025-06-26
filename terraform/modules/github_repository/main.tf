@@ -2,15 +2,15 @@ locals {
   provider = split("-", var.repository_name)[2]
   provider_formatted = (local.provider == "azurerm" ? "AzureRM" :
   (local.provider == "aws" ? "AWS" : local.provider))
-  module_name = join("-", slice(split("-", var.repository_name), 2, length(split("-", var.repository_name))))
-  visibility  = coalesce(data.github_repository.existing_repo[0].visibility, "public")
-  description = coalesce(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module")
+  module_name  = join("-", slice(split("-", var.repository_name), 2, length(split("-", var.repository_name))))
+  visibility   = coalesce(data.github_repository.existing_repo[0].visibility, "public")
+  description  = coalesce(data.github_repository.existing_repo[0].description, "☁️ Cloudeteer's Terraform ${local.provider_formatted} ${local.module_name} module")
+  is_template  = data.github_repository.existing_repo[0].is_template
+  homepage_url = coalesce(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
   combined_topics = concat(
     coalesce(data.github_repository.existing_repo[0].topics, []),
     ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
   )
-  homepage_url                    = coalesce(data.github_repository.existing_repo[0].homepage_url, "https://www.cloudeteer.de")
-  is_template                     = data.github_repository.existing_repo[0].is_template
 }
 
 data "github_repository" "existing_repo" {
@@ -33,6 +33,8 @@ resource "github_repository" "repository" {
   allow_rebase_merge          = false
   allow_squash_merge          = true
   allow_update_branch         = true
+  squash_merge_commit_message = "BLANK"
+  squash_merge_commit_title   = "PR_TITLE"
   topics                      = local.combined_topics
   homepage_url                = local.homepage_url
   vulnerability_alerts        = true
@@ -131,15 +133,17 @@ resource "github_issue_label" "feature" {
 }
 
 resource "github_issue_label" "breaking_change" {
-  repository = github_repository.repository.name
-  name       = "breaking-change"
-  color      = "b60205"
+  repository  = github_repository.repository.name
+  name        = "breaking-change"
+  description = "Breaking changes requiring user action or updates"
+  color       = "b60205"
 }
 
 resource "github_issue_label" "ignore_release" {
-  repository = github_repository.repository.name
-  name       = "ignore-release"
-  color      = "e4e669"
+  repository  = github_repository.repository.name
+  name        = "ignore-release"
+  description = "Does not trigger a release or changelog entry"
+  color       = "e4e669"
 }
 
 resource "github_issue_label" "other" {

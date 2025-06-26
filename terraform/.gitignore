@@ -1,5 +1,7 @@
 # Local .terraform directories
 **/.terraform/*
+# generated files
+.azure-env
 
 # .tfstate files
 *.tfstate

@@ -7,6 +7,11 @@ WHITE  := $(shell tput -Txterm setaf 7)
 CYAN   := $(shell tput -Txterm setaf 6)
 RESET  := $(shell tput -Txterm sgr0)
 
+# Parse subscription from Terraform file
+SUBSCRIPTION_FILE := module-repo-setup.tf
+# Name of the env cache file
+AZURE_ENV := .azure-env
+
 ##
 # Targets
 ##
@@ -21,8 +26,8 @@ help: ## show this help.
 		else if (/^## .*$$/) {printf "  ${CYAN}%s${RESET}\n", substr($$1,4)} \
 		}' $(MAKEFILE_LIST)
 
-.PHONY: create-terraform-state-container
-create-terraform-state-container: ## create storage account container for terraform state
+.PHONY: create_terraform_state_container
+create_terraform_state_container: ## create storage account container for terraform state
 	export SUBSCRIPTION_ID=a78e11bf-66d8-4aae-b171-cc43ced4e6ca && \
 	export RESOURCE_GROUP_NAME=rg-terraform-governance && \
 	export STORAGE_ACCOUNT_NAME=sttfgovernancestate && \
@@ -42,19 +47,28 @@ unlock: ## Unlock the state file
 	tofu force-unlock -force $$LOCK_ID
 
 .PHONY: validate
-validate: ## Validate terragrunt files + terraform level modules
+validate: ## Validate terraform files
 	@tofu validate
 
+.PHONY: azure_env
+azure_env: ## Generate .azure-env with Azure credentials if it doesn't exist
+	@if [ ! -f $(AZURE_ENV) ]; then \
+		echo "[+] Generating $(AZURE_ENV)..." && \
+		echo "export TF_VAR_ARM_SUBSCRIPTION_ID=$$(sed -n 's/.*subscription_id *= *\"\(.*\)\".*/\1/p' $(SUBSCRIPTION_FILE))" >> $(AZURE_ENV) && \
+		echo "export TF_VAR_ARM_CLIENT_ID=$$(az account show --query user.name -o tsv)" >> $(AZURE_ENV) && \
+		echo "export TF_VAR_ARM_TENANT_ID=$$(az account show --query tenantId -o tsv)" >> $(AZURE_ENV); \
+	else \
+		echo "[✓] $(AZURE_ENV) already exists."; \
+	fi
+
 .PHONY: plan
-plan: ## run terragrunt plan for all levels
-	@ARM_SUBSCRIPTION_ID=a78e11bf-66d8-4aae-b171-cc43ced4e6ca \
-	tofu plan
+plan: azure_env ## Run Terraform plan
+	@. $(AZURE_ENV) && tofu plan
 
 .PHONY: apply
-apply: ## run terragrunt apply for all levels
-	@ARM_SUBSCRIPTION_ID=a78e11bf-66d8-4aae-b171-cc43ced4e6ca \
-	tofu apply
+apply: azure_env ## Run Terraform apply
+	@. $(AZURE_ENV) && tofu apply
 
 .PHONY: destroy
-destroy: ## run terragrunt destroy for all levels
-	@tofu destroy
+destroy: azure_env ## Run Terraform destroy
+	@. $(AZURE_ENV) && tofu destroy

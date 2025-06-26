@@ -4,7 +4,7 @@ variable "repository_name" {
 }
 
 variable "actions_secrets" {
-  description = "GitHub Actions evnrionment secrets to create."
+  description = "GitHub Actions environment secrets to create."
   type        = map(string)
   default     = {}
   sensitive   = true
