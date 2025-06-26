@@ -10,10 +10,10 @@ jobs:
         run: apk add git
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Checkout terraform-docs.yaml
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           path: .terraform-governance
           repository: cloudeteer/terraform-governance
