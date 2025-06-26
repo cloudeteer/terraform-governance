@@ -11,6 +11,7 @@ RESET  := $(shell tput -Txterm sgr0)
 SUBSCRIPTION_FILE := module-repo-setup.tf
 # Name of the env cache file
 AZURE_ENV := .azure-env
+TENV_DEFAULT_TOFU := true
 
 ##
 # Targets
@@ -40,6 +41,10 @@ create_terraform_state_container: ## create storage account container for terraf
 init: ## Initialize the directory only where the command is being used.
 	tenv tofu detect
 	tofu init
+
+.PHONY: upgrade
+upgrade: ## Upgrade the Terraform dependencies
+	tofu init -upgrade
 
 .PHONY: unlock
 unlock: ## Unlock the state file

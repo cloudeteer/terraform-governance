@@ -33,7 +33,7 @@ env:
   TF_IN_AUTOMATION: true
   TF_INPUT: false
   # renovate: github=opentofu/opentofu
-  TF_VERSION: v1.8.4
+  TF_VERSION: v1.10.1
   # https://developer.hashicorp.com/terraform/cli/commands#upgrade-and-security-bulletin-checks
   CHECKPOINT_DISABLE: true
   GITHUB_TOKEN: ${{ secrets.MANAGE_REPOS_GITHUB_TOKEN }}
