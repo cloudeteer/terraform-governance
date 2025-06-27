@@ -151,3 +151,10 @@ resource "github_issue_label" "other" {
   name       = "other"
   color      = "cfd3d7"
 }
+
+resource "github_repository_custom_property" "auto_terraform_governance" {
+  repository = github_repository.repository.name
+  property_name  = "auto-terraform-governance"
+  property_type  = "true_false"
+  property_value = ["true"]
+}
