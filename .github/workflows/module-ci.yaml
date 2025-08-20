@@ -14,6 +14,9 @@ jobs:
   lint:
     uses: ./.github/workflows/module-ci-lint.yaml
 
+  precommit:
+    uses: ./.github/workflows/module-ci-precommit.yaml
+
   documentation:
     uses: ./.github/workflows/module-ci-documentation.yaml
 
@@ -29,5 +32,5 @@ jobs:
 
   issue:
     if: github.event_name == 'schedule' && failure()
-    needs: [validate, lint, documentation, code-analysis, test]
+    needs: [validate, lint, precommit, documentation, code-analysis, test]
     uses: ./.github/workflows/module-ci-issue.yaml
