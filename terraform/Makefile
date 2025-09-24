@@ -43,7 +43,7 @@ init: ## Initialize the directory only where the command is being used.
 	tofu init
 
 .PHONY: upgrade
-upgrade: ## Upgrade the Terraform dependencies
+upgrade: ## Upgrade the tofu dependencies
 	tofu init -upgrade
 
 .PHONY: unlock
@@ -52,7 +52,7 @@ unlock: ## Unlock the state file
 	tofu force-unlock -force $$LOCK_ID
 
 .PHONY: validate
-validate: ## Validate terraform files
+validate: ## Validate tofu files
 	@tofu validate
 
 .PHONY: azure_env
@@ -67,13 +67,21 @@ azure_env: ## Generate .azure-env with Azure credentials if it doesn't exist
 	fi
 
 .PHONY: plan
-plan: azure_env ## Run Terraform plan
+plan: azure_env ## Run tofu plan
 	@. $(AZURE_ENV) && tofu plan
 
+.PHONY: plan-refresh
+plan-refresh: azure_env ## Run tofu plan with refresh-only
+	@. $(AZURE_ENV) && tofu plan -refresh-only
+
+.PHONY: console
+console: ## Run tofu console. You may run "make plan-refresh" before.
+	@tofu console
+
 .PHONY: apply
-apply: azure_env ## Run Terraform apply
+apply: azure_env ## Run tofu apply
 	@. $(AZURE_ENV) && tofu apply
 
 .PHONY: destroy
-destroy: azure_env ## Run Terraform destroy
+destroy: azure_env ## Run tofu destroy
 	@. $(AZURE_ENV) && tofu destroy

@@ -11,12 +11,49 @@ locals {
     coalesce(data.github_repository.existing_repo[0].topics, []),
     ["cloudeteer", "terraform", "terraform-module", "auto-terraform-governance"]
   )
+  static_teams = [
+    {
+      permission = "admin"
+      slug       = "service-accounts"
+    },
+    {
+      permission = "admin"
+      slug       = "chapter-operations-engineering"
+    }
+  ]
+  static_users = [
+    {
+      permission = "admin"
+      username   = "cloudeteerbot"
+    }
+  ]
+  dynamic_teams = [
+    for t in data.github_repository_teams.current_teams.teams : {
+      permission = t.permission
+      slug       = t.slug
+    }
+  ]
+  merged_teams = distinct(concat(local.static_teams, local.dynamic_teams))
+  merged_collaborators = {
+    teams = local.merged_teams
+    users = local.static_users
+  }
 }
 
 data "github_repository" "existing_repo" {
   count     = 1
   full_name = "cloudeteer/${var.repository_name}"
 }
+
+data "github_repository_teams" "current_teams" {
+  name = github_repository.repository.name
+}
+
+data "github_team" "by_slug" {
+  for_each = { for t in local.merged_teams : t.slug => t }
+  slug     = each.key
+}
+
 
 # https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository
 resource "github_repository" "repository" {
@@ -52,26 +89,23 @@ resource "github_repository" "repository" {
   }
 }
 
-# https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_collaborators
-# token permissions:
-# - repo
-# - read:org
 resource "github_repository_collaborators" "admins" {
   repository = github_repository.repository.name
-  # get id: $ gh api /orgs/cloudeteer/teams/service-accounts | jq '.id'
-  team {
-    permission = "admin"
-    team_id    = "6206668" # team-slug: service-accounts
+
+  dynamic "team" {
+    for_each = local.merged_collaborators.teams
+    content {
+      permission = team.value.permission
+      team_id    = data.github_team.by_slug[team.value.slug].id
+    }
   }
-  team {
-    permission = "admin"
-    team_id    = "5433329" # team-slug: chapter-operations-engineering
-  }
-  # Do not delete "cloudeteerbot" as admin even it is part of "service-accounts",
-  # because there is a race-condition in the deployment situation.
-  user {
-    permission = "admin"
-    username   = "cloudeteerbot"
+
+  dynamic "user" {
+    for_each = local.merged_collaborators.users
+    content {
+      permission = user.value.permission
+      username   = user.value.username
+    }
   }
 }
 
