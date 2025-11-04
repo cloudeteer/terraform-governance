@@ -20,6 +20,8 @@ on:
   pull_request:
     types:
       - opened
+      - reopened
+      - synchronize
       - labeled
       - unlabeled
 
