@@ -64,7 +64,6 @@ resource "github_repository" "repository" {
   has_issues                  = true
   has_projects                = false
   has_wiki                    = false
-  has_downloads               = false
   allow_auto_merge            = true
   allow_merge_commit          = false
   allow_rebase_merge          = false
@@ -74,7 +73,6 @@ resource "github_repository" "repository" {
   squash_merge_commit_title   = "PR_TITLE"
   topics                      = local.combined_topics
   homepage_url                = local.homepage_url
-  vulnerability_alerts        = true
   # may cause "Commit signoff is enforced by the organization and cannot be disabled" https://github.com/integrations/terraform-provider-github/issues/2077
   web_commit_signoff_required = true
   delete_branch_on_merge      = true
@@ -87,6 +85,11 @@ resource "github_repository" "repository" {
   lifecycle {
     prevent_destroy = true
   }
+}
+
+resource "github_repository_vulnerability_alerts" "this" {
+  repository = github_repository.repository.name
+  enabled    = true
 }
 
 resource "github_repository_collaborators" "admins" {
@@ -114,7 +117,7 @@ resource "github_actions_secret" "this" {
   for_each = nonsensitive(var.actions_secrets)
 
   secret_name     = each.key
-  plaintext_value = sensitive(each.value)
+  value = sensitive(each.value)
 
   repository = github_repository.repository.name
 }
